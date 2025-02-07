@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const ChooseRole = () => {
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/Logo.png')} style={styles.logo} />
+      <Image source={require('../../assets/Logo.png')} style={styles.logo} />
 
       <Text style={styles.chooseRoleText}>Choose role</Text>
 
@@ -16,7 +16,7 @@ const ChooseRole = () => {
           end={{ x: 1, y: 0 }}
           style={styles.button}
         >
-          <Image source={require('../assets/PatientProfile.png')} style={styles.buttonIcon} />
+          <Image source={require('../../assets/PatientProfile.png')} style={styles.buttonIcon} />
         </LinearGradient>
       </TouchableOpacity>
       <Text style={styles.buttonText}>Patient</Text>
@@ -28,7 +28,7 @@ const ChooseRole = () => {
           end={{ x: 1, y: 0 }}
           style={styles.button}
         >
-          <Image source={require('../assets/CaretakerProfile.png')} style={styles.buttonIcon} />
+          <Image source={require('../../assets/CaretakerProfile.png')} style={styles.buttonIcon} />
         </LinearGradient>
       </TouchableOpacity>
       <Text style={styles.buttonText}>Caretaker</Text>

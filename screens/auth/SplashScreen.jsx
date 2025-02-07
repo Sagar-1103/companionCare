@@ -17,7 +17,7 @@ const SplashScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar hidden />
-      <Image source={require('../assets/LogoText.png')} style={styles.logo} />
+      <Image source={require('../../assets/LogoText.png')} style={styles.logo} />
     </View>
   );
 };
