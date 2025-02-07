@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Maps from "../components/Maps";
 import Home from "../components/Home";
 import Camera from "../components/Camera";
-import SplashScreen from '../components/SplashScreen';
+import SplashScreen from '../screens/auth/SplashScreen';
 import TabNavigation from './TabNavigation';
 
 const Stack = createNativeStackNavigator();
