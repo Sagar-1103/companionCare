@@ -12,7 +12,7 @@ const PatientDetails = () => {
   const [patientName, setPatientName] = useState('');
   const [patientEmail, setPatientEmail] = useState('');
   const [gender, setGender] = useState(null);
-  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [dateOfBirth, setDateOfBirth] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -61,28 +61,28 @@ const PatientDetails = () => {
         />
       </View>
 
-      <View style={styles.GenderInputContainer}>
+      <View style={styles.inputContainer}>
         <FontAwesome name="transgender" size={24} color="#B0B0B0" style={styles.icon} />
         <Dropdown
           style={styles.dropdown}
           placeholder="Select Gender"
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
+          itemTextStyle={styles.itemTextStyle}
           data={genderData}
           labelField="label"
           valueField="value"
           value={gender}
           onChange={item => setGender(item.value)}
           renderLeftIcon={() => null}
-          dropdownStyle={styles.dropdownStyle} 
         />
       </View>
 
-      <View style={styles.CalendarInputContainer}>
+      <View style={[styles.inputContainer, {paddingVertical: 18}]}>
         <Ionicons name="calendar-outline" size={24} color="#B0B0B0" style={styles.icon} />
         <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-          <Text style={[styles.input, { color: dateOfBirth ? '#808080' : '#B0B0B0' }]}>
-            {dateOfBirth ? dateOfBirth.toLocaleDateString() : "Patient's Date of Birth"} {/* Show placeholder or date */}
+          <Text style={[styles.input, { color: dateOfBirth ? '#505050' : '#B0B0B0' }]}>
+            {dateOfBirth ? dateOfBirth.toLocaleDateString() : "Patient's Date of Birth"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -90,7 +90,7 @@ const PatientDetails = () => {
       {showDatePicker && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={dateOfBirth}
+          value={dateOfBirth || new Date()}
           mode="date"
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           onChange={onChangeDate}
@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '800',
     color: '#000000',
-    marginRight: 20,
     flex: 1,
     textAlign: 'center',
   },
@@ -144,37 +143,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E0E0E0',
     paddingHorizontal: 15,
-    paddingVertical: 4, // Increased height
-    marginBottom: 25,
-  },
-  GenderInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8F8F8',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    paddingHorizontal: 15,
-    paddingVertical: 8, // Increased height
-    marginBottom: 25,
-  },
-  CalendarInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8F8F8',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    paddingHorizontal: 15,
-    paddingVertical: 15, // Increased height
+    paddingVertical: 10,
     marginBottom: 25,
   },
   input: {
     flex: 1,
     fontSize: 18,
-    paddingVertical: 10,
-    backgroundColor: 'transparent',
-    color: '#808080',
+    color: '#505050',
   },
   icon: {
     marginRight: 10,
@@ -182,9 +157,7 @@ const styles = StyleSheet.create({
   dropdown: {
     flex: 1,
     height: 40,
-    backgroundColor: 'transparent', // Lightest shade of grey
-    color: '#000000',
-    borderRadius: 8,
+    backgroundColor: 'transparent',
   },
   placeholderStyle: {
     fontSize: 18,
@@ -192,7 +165,11 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 18,
-    color: '#B0B0B0',
+    color: '#000000',
+  },
+  itemTextStyle: {
+    fontSize: 16,
+    color: '#505050',
   },
   continueButton: {
     width: '100%',
@@ -208,44 +185,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
   },
-   dropdown: {
-    flex: 1,
-    height: 40,
-    backgroundColor: '#F0F0F0', // Light gray background for dropdown input
-    borderRadius: 8,
-    paddingHorizontal: 10,  // Add some horizontal padding
-    borderWidth: 1,
-    borderColor: '#E0E0E0'
-  },
-  dropdownStyle: {
-    backgroundColor: '#F0F0F0', // Light gray background for dropdown list
-    borderRadius: 8,
-  },
-  placeholderStyle: {
-    fontSize: 18,
-    color: '#B0B0B0', // Placeholder color
-  },
-  selectedTextStyle: {
-    fontSize: 18,
-    color: '#808080', // Darker gray for selected text
-  },
-  CalendarInputContainer: {  // Keep this style
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8F8F8',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    paddingHorizontal: 15,
-    paddingVertical: 15, // Increased height
-    marginBottom: 25,
- },
-  input: {
-    flex: 1,
-    fontSize: 18,
-    paddingVertical: 10,
-    backgroundColor: 'transparent',
- },
 });
 
 export default PatientDetails;
