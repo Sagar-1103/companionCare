@@ -3,11 +3,11 @@ import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 
-const SignInCode = () => {
+const SignInCode = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Back pressed')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={30} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Sign In</Text>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useLogin } from '../../../context/LoginProvider';
 
-const DiseaseSelectionScreen = () => {
+const DiseaseSelectionScreen = ({navigation}) => {
   const diseases = [
     'Diabetes',
     'Hypertension',
@@ -22,7 +23,6 @@ const DiseaseSelectionScreen = () => {
   ];
 
   const [selectedDiseases, setSelectedDiseases] = useState([]);
-
   const handleDiseasePress = (disease) => {
     if (selectedDiseases.includes(disease)) {
       setSelectedDiseases(selectedDiseases.filter((item) => item !== disease));
@@ -34,7 +34,7 @@ const DiseaseSelectionScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Back pressed')}>
+        <TouchableOpacity>
           <AntDesign name="left" size={30} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Select Disease</Text>

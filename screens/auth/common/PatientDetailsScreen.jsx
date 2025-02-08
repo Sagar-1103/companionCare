@@ -1,25 +1,31 @@
 import React, { useState } from 'react';
 import { 
-  View, Text, TextInput, TouchableOpacity, StyleSheet, Platform 
+  View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, 
+  Alert
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Dropdown } from 'react-native-element-dropdown'; 
+import { BACKEND_URL } from '@env';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
+import axios from 'axios';
+import { useLogin } from '../../../context/LoginProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PatientDetails = () => {
+const PatientDetails = ({navigation}) => {
   const [patientName, setPatientName] = useState('');
   const [patientEmail, setPatientEmail] = useState('');
   const [gender, setGender] = useState(null);
   const [dateOfBirth, setDateOfBirth] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
-
+  const {user,setUser} = useLogin();
+  
   const genderData = [
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
-    { label: 'Other', value: 'other' },
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' },
+    { label: 'Others', value: 'Others' },
   ];
 
   const onChangeDate = (event, selectedDate) => {
@@ -29,10 +35,41 @@ const PatientDetails = () => {
     setShowDatePicker(false);
   };
 
+  const handleContinue = async()=>{
+    try {
+      if(!patientEmail || !patientName || !gender || !dateOfBirth || !phoneNumber){
+        Alert.alert("Missing fields","Fill all the fields");
+        return;
+      }
+      const url = `${BACKEND_URL}/users/register-patient-by-caretaker`;
+      const response = await axios.post(url,{name:patientName,email:patientEmail,phNo:phoneNumber,dob:new Date(dateOfBirth).toLocaleDateString("en-GB"),gender,role:"patient",caretakerId:user.id},{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      });
+      const res = await response.data;
+      if (res.success) {
+        const url = `${BACKEND_URL}/users/current-caretaker/${user.id}`;
+        const response1 = await axios.get(url);
+        const res1 = await response1.data;
+        const tempUser = res1.data.caretaker; 
+        setUser(tempUser);
+        await AsyncStorage.setItem('user',JSON.stringify(tempUser));
+        setPatientName("");
+        setPatientEmail("");
+        setGender(null);
+        setDateOfBirth(null);   
+        setPhoneNumber("");   
+      }
+    } catch (error) {
+      console.log("Error : ",error.message);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Back pressed')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={30} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Patient Details</Text>
@@ -109,7 +146,7 @@ const PatientDetails = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.continueButton}>
+      <TouchableOpacity onPress={handleContinue} style={styles.continueButton}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
     </View>

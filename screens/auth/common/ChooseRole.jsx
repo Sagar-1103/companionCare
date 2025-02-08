@@ -1,34 +1,42 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Logo from "../../../assets/Logo.png";
+import PatientProfile from "../../../assets/PatientProfile.png";
+import CaretakerProfile from "../../../assets/CaretakerProfile.png";
 
-const ChooseRole = () => {
+const ChooseRole = ({navigation}) => {
+
+  const handleNavigate = async(route)=>{
+    navigation.navigate(route);
+  }
+
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/Logo.png')} style={styles.logo} />
+      <Image source={Logo} style={styles.logo} />
 
       <Text style={styles.chooseRoleText}>Choose role</Text>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>{handleNavigate("CareTakerChoiceScreen")}}>
         <LinearGradient
           colors={['#0047AB', '#1E9DFF']} 
           start={{ x: 0, y: 0 }} 
           end={{ x: 1, y: 0 }}
           style={styles.button}
         >
-          <Image source={require('../../assets/PatientProfile.png')} style={styles.buttonIcon} />
+          <Image source={PatientProfile} style={styles.buttonIcon} />
         </LinearGradient>
       </TouchableOpacity>
       <Text style={styles.buttonText}>Patient</Text>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>{handleNavigate("SignUp")}} >
         <LinearGradient
           colors={['#32A032', '#006400']}
           start={{ x: 0, y: 0 }} 
           end={{ x: 1, y: 0 }}
           style={styles.button}
         >
-          <Image source={require('../../assets/CaretakerProfile.png')} style={styles.buttonIcon} />
+          <Image source={CaretakerProfile} style={styles.buttonIcon} />
         </LinearGradient>
       </TouchableOpacity>
       <Text style={styles.buttonText}>Caretaker</Text>

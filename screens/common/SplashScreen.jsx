@@ -1,23 +1,13 @@
 import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, StatusBar } from 'react-native';
-// import { useNavigation } from '@react-navigation/native';
+import Logo from "../../assets/LogoText.png";
 
 const SplashScreen = () => {
-
-//   const navigation = useNavigation();
-
-//   useEffect(() => {
-//     const timer = setTimeout(() => {
-//       navigation.navigate('ChooseRole');
-//     }, 3000);
-
-//     return () => clearTimeout(timer);
-//   }, [navigation]);
 
   return (
     <View style={styles.container}>
       <StatusBar hidden />
-      <Image source={require('../../assets/LogoText.png')} style={styles.logo} />
+      <Image source={Logo} style={styles.logo} />
     </View>
   );
 };

@@ -1,34 +1,41 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Logo from "../../../assets/Logo.png";
+import Check from "../../../assets/check.png";
+import Cross from "../../../assets/cross.png";
 
-const CareTakerChoiceScreen = () => {
+const CareTakerChoiceScreen = ({navigation}) => {
+
+  const handleNavigate = async(route)=>{
+    navigation.navigate(route);
+  }
+
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/Logo.png')} style={styles.logo} />
+      <Image source={Logo} style={styles.logo} />
 
       <Text style={styles.questionText}>Do you have a caretaker?</Text>
-
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>handleNavigate("SignInCode")} >
         <LinearGradient
           colors={['#32A032', '#006400']} 
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.button}
         >
-          <Image source={require('../assets/check.png')} style={styles.buttonIcon} />
+          <Image source={Check} style={styles.buttonIcon} />
         </LinearGradient>
       </TouchableOpacity>
       <Text style={styles.buttonText}>Yes</Text>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>handleNavigate("PatientSignUp")}>
         <LinearGradient
           colors={['#FF4B4B', '#D32F2F']} 
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.button}
         >
-          <Image source={require('../assets/cross.png')} style={styles.buttonIcon} />
+          <Image source={Cross} style={styles.buttonIcon} />
         </LinearGradient>
       </TouchableOpacity>
       <Text style={styles.buttonText}>No</Text>
