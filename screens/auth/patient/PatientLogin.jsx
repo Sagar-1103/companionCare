@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import axios from 'axios';
+import { useLogin } from '../../../context/LoginProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_URL} from "../../../constants/Ports";
 
 const PatientLogin = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -9,7 +13,7 @@ const PatientLogin = ({navigation}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const role = "patient";
+  const {setUser,setRefreshToken,setAccessToken} = useLogin();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -17,7 +21,26 @@ const PatientLogin = ({navigation}) => {
 
   const handleLogin = async()=>{
     try {
-
+      if(!email || !password){
+        Alert.alert("Missing fields","Fill all the fields");
+        return;
+      }
+      const url = `${BACKEND_URL}/users/login-patient`;
+      const response = await axios.post(url,{email,password},{headers:{
+        "Content-Type":"application/json"
+      }})
+      const res = await response.data;
+      if (res.success) {
+        const { accessToken, refreshToken,patient } = res.data;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setUser(patient);
+        await AsyncStorage.setItem('accessToken',accessToken);
+        await AsyncStorage.setItem('refreshToken',refreshToken);
+        await AsyncStorage.setItem('user',JSON.stringify(patient));
+      }
+      setEmail("");
+      setPassword("");
     } catch (error) {
       console.log("Error : ",error);
     }
@@ -69,7 +92,7 @@ const PatientLogin = ({navigation}) => {
       </View>
 
       <TouchableOpacity onPress={handleLogin} style={styles.signUpButton}>
-        <Text style={styles.signUpButtonText}>Sign Up</Text>
+        <Text style={styles.signUpButtonText}>Sign In</Text>
       </TouchableOpacity>
 
       <View style={styles.footer}>

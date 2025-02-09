@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
     const [loading,setLoading] = useState(true);
-    const {user,setUser,setAccessToken,setRefreshToken} = useLogin();
+    const {user,setUser,setAccessToken,setRefreshToken,done,setDone} = useLogin();
     
     useEffect(()=>{
         storageAccess();
@@ -32,9 +32,13 @@ const AppNavigator = () => {
             const tempUser = await AsyncStorage.getItem('user');
             const tempAccessToken = await AsyncStorage.getItem('accessToken');
             const tempRefreshToken = await AsyncStorage.getItem('refreshToken');
+            const tempDone = await AsyncStorage.getItem('done');
             setUser(JSON.parse(tempUser));
             setAccessToken(tempAccessToken);
             setRefreshToken(tempRefreshToken);
+            if(tempDone==="true"){
+                setDone(true);
+            }
     }
 
     if (loading) {
@@ -67,13 +71,44 @@ const AppNavigator = () => {
         );
     }
 
-    if(user.role==="caretaker" && user.patientId){
+    if(user.role==="caretaker" && user.patientId && !done){
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="DiseaseSelectionScreen"  >
                     <Stack.Screen name="DiseaseSelectionScreen" component={DiseaseSelectionScreen}/>
         </Stack.Navigator>
         );
     }
+
+    if(user.role==="caretaker" && user.patientId){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
+                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+        </Stack.Navigator>
+        );
+    }
+
+    if(user.role==="patient" && !user.caretakerId && !user.diseases?.length){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="DiseaseSelectionScreen"  >
+                    <Stack.Screen name="DiseaseSelectionScreen" component={DiseaseSelectionScreen}/>
+        </Stack.Navigator>
+        );
+    }
+    if(user.role==="patient" && !user.caretakerId){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
+                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+        </Stack.Navigator>
+        );
+    }
+    if(user.role==="patient" && user.caretakerId){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
+                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+        </Stack.Navigator>
+        );
+    }
+    return null;
         
 };
 

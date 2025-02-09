@@ -1,35 +1,69 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useLogin } from '../../../context/LoginProvider';
+import {BACKEND_URL} from "../../../constants/Ports";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const DiseaseSelectionScreen = ({navigation}) => {
+
+  const {user,setDone,setUser} = useLogin();
+  const patientId = user.role==="caretaker" ? user.patientId : user.id;
   const diseases = [
-    'Diabetes',
-    'Hypertension',
-    'Asthma',
-    'Arthritis',
-    'Cancer',
-    'Alzheimer’s',
-    'Parkinson’s',
-    'HIV/AIDS',
-    'Tuberculosis',
-    'Malaria',
-    'Epilepsy',
-    'Osteoporosis',
-    'Chronic Kidney Disease',
-    'Heart Disease',
-    'Stroke',
+    {diseaseId:1,diseaseName:"Diabetes"},
+    {diseaseId:2,diseaseName:"Hypertension"},
+    {diseaseId:3,diseaseName:"Asthma"},
+    {diseaseId:4,diseaseName:"Arthritis"},
+    {diseaseId:5,diseaseName:"Cancer"},
+    {diseaseId:6,diseaseName:"Alzheimer’s"},
+    {diseaseId:7,diseaseName:"Parkinson’s"},
+    {diseaseId:8,diseaseName:"HIV/AIDS"},
+    {diseaseId:9,diseaseName:"Tuberculosis"},
+    {diseaseId:10,diseaseName:"Malaria"},
+    {diseaseId:11,diseaseName:"Epilepsy"},
+    {diseaseId:12,diseaseName:"Osteoporosis"},
+    {diseaseId:13,diseaseName:"Chronic Kidney Disease"},
+    {diseaseId:14,diseaseName:"Heart Disease"},
+    {diseaseId:15,diseaseName:"Stroke"},
   ];
 
   const [selectedDiseases, setSelectedDiseases] = useState([]);
   const handleDiseasePress = (disease) => {
-    if (selectedDiseases.includes(disease)) {
-      setSelectedDiseases(selectedDiseases.filter((item) => item !== disease));
+    const isSelected = selectedDiseases.some((item) => item.diseaseId === disease.diseaseId);
+    
+    if (isSelected) {
+      setSelectedDiseases(selectedDiseases.filter((item) => item.diseaseId !== disease.diseaseId));
     } else {
       setSelectedDiseases([...selectedDiseases, disease]);
     }
   };
+
+  const handleContinue = async()=>{
+    try {
+      // if(!selectedDiseases.length){
+      //   Alert.alert("Missing fields","Fill all the fields");
+      //   return;
+      // }
+      const url = `${BACKEND_URL}/users/set-diseases/${patientId}`;
+      const response = await axios.post(url,{diseaseList:selectedDiseases},{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      });
+      const res = await response.data;
+      if (res.success) {
+        const url = `${BACKEND_URL}/users/current-patient/${user.id}`;
+        const response1 = await axios.get(url);
+        const res1 = await response1.data;
+        const tempUser = res1.data.patient; 
+        setUser(tempUser);
+        await AsyncStorage.setItem('user',JSON.stringify(tempUser));
+      }
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -40,20 +74,20 @@ const DiseaseSelectionScreen = ({navigation}) => {
         <Text style={styles.headerText}>Select Disease</Text>
       </View>
 
-      <ScrollView style={styles.listContainer}>
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.listContainer}>
         {diseases.map((disease, index) => (
           <TouchableOpacity
-            key={index}
-            style={[
-              styles.diseaseItem,
-              selectedDiseases.includes(disease) && styles.diseaseItemPressed, 
-            ]}
-            onPress={() => handleDiseasePress(disease)} 
-          >
-            <Text style={styles.diseaseText}>{disease}</Text>
-          </TouchableOpacity>
+          key={disease.diseaseId}
+          style={[
+            styles.diseaseItem,
+            selectedDiseases.some((item) => item.diseaseId === disease.diseaseId) && styles.diseaseItemPressed, 
+          ]}
+          onPress={() => handleDiseasePress(disease)}
+        >
+          <Text style={styles.diseaseText}>{disease.diseaseName}</Text>
+        </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.continueButton}>
+        <TouchableOpacity onPress={handleContinue} style={styles.continueButton}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
       </ScrollView>

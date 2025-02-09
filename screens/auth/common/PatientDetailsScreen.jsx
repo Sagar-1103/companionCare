@@ -7,11 +7,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Dropdown } from 'react-native-element-dropdown'; 
-import { BACKEND_URL } from '@env';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
 import axios from 'axios';
 import { useLogin } from '../../../context/LoginProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_URL} from "../../../constants/Ports";
 
 const PatientDetails = ({navigation}) => {
   const [patientName, setPatientName] = useState('');
@@ -53,6 +53,8 @@ const PatientDetails = ({navigation}) => {
         const response1 = await axios.get(url);
         const res1 = await response1.data;
         const tempUser = res1.data.caretaker; 
+        console.log(tempUser);
+        
         setUser(tempUser);
         await AsyncStorage.setItem('user',JSON.stringify(tempUser));
         setPatientName("");

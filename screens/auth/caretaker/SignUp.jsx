@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { BACKEND_URL } from '@env';
+import { BACKEND_URL } from '../../../constants/Ports';
 import axios from 'axios';
 import { useLogin } from '../../../context/LoginProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -35,6 +35,11 @@ const SignUp = ({navigation}) => {
         Alert.alert("Missing fields","Fill all the fields");
         return;
       }
+      if(password!==confirmPassword){
+        Alert.alert("Password Mismatch","Your passwords do not match");
+        setConfirmPassword("");
+        return;
+      }
       const url = `${BACKEND_URL}/users/register-caretaker`;
       const response = await axios.post(url,{name,email,password,phNo:phoneNumber,role:"caretaker"},{headers:{
         "Content-Type":"application/json"
@@ -55,7 +60,6 @@ const SignUp = ({navigation}) => {
       setPassword("");
       setConfirmPassword("");
       setPhoneNumber("");
-      navigation.navigate("PatientDetails");
     } catch (error) {
       console.log("Error : ",error);
     }

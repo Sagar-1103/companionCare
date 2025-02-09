@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { BACKEND_URL } from '@env';
+import { BACKEND_URL } from '../../../constants/Ports';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import { useLogin } from '../../../context/LoginProvider';
@@ -26,8 +26,6 @@ const CaretakerLogin = ({navigation}) => {
         return;
       }
       const url = `${BACKEND_URL}/users/login-caretaker`;
-      console.log(url);
-      
       const response = await axios.post(url,{email,password},{headers:{
         "Content-Type":"application/json"
       }})
