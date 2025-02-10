@@ -7,9 +7,10 @@ const LoginProvider = props => {
   const [accessToken,setAccessToken] = useState(null);
   const [refreshToken,setRefreshToken] = useState(null);
   const [done,setDone] = useState(false);
+  const [medications,setMedications] = useState(false);
     return (
     <LoginContext.Provider
-      value={{user,setUser,done,setDone,accessToken,setAccessToken,refreshToken,setRefreshToken}}>
+      value={{user,setUser,done,setDone,medications,setMedications,accessToken,setAccessToken,refreshToken,setRefreshToken}}>
       {props.children}
     </LoginContext.Provider>
   );

@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
     const [loading,setLoading] = useState(true);
-    const {user,setUser,setAccessToken,setRefreshToken,done,setDone} = useLogin();
+    const {user,setUser,setAccessToken,setRefreshToken,done,setDone,setMedications} = useLogin();
     
     useEffect(()=>{
         storageAccess();
@@ -33,6 +33,8 @@ const AppNavigator = () => {
             const tempAccessToken = await AsyncStorage.getItem('accessToken');
             const tempRefreshToken = await AsyncStorage.getItem('refreshToken');
             const tempDone = await AsyncStorage.getItem('done');
+            const tempMedications = await AsyncStorage.getItem('medications');
+            setMedications(JSON.parse(tempMedications));
             setUser(JSON.parse(tempUser));
             setAccessToken(tempAccessToken);
             setRefreshToken(tempRefreshToken);

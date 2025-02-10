@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -78,6 +78,7 @@ const PatientSignUp = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={30} color="#000000" />
@@ -197,6 +198,15 @@ const PatientSignUp = ({navigation}) => {
       <TouchableOpacity onPress={handleSignup} style={styles.continueButton}>
         <Text style={styles.continueButtonText}>Sign Up</Text>
       </TouchableOpacity>
+
+      <View style={styles.footer}>
+          <Text style={styles.footerText}>Dont have a account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("PatientLogin")}>
+            <Text style={styles.signInText}>Sign In</Text>
+          </TouchableOpacity>
+      </View>
+      
+      </ScrollView>
     </View>
   );
 };
@@ -269,6 +279,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#ffffff',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  footerText: {
+    fontSize: 18,
+    color: '#1D1D1D',
+  },
+  signInText: {
+    fontSize: 18,
+    color: '#000080',
+    fontWeight: 'bold',
   },
 });
 
