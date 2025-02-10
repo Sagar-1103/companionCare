@@ -1,25 +1,31 @@
 import React, { useState } from 'react';
-import { 
-  View, Text, TextInput, TouchableOpacity, StyleSheet, Platform 
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Dropdown } from 'react-native-element-dropdown'; 
-import DateTimePicker from '@react-native-community/datetimepicker'; 
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useLogin } from '../../../context/LoginProvider';
+import { BACKEND_URL } from '../../../constants/Ports';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PatientDetails = () => {
+const PatientSignUp = ({navigation}) => {
   const [patientName, setPatientName] = useState('');
   const [patientEmail, setPatientEmail] = useState('');
   const [gender, setGender] = useState(null);
   const [dateOfBirth, setDateOfBirth] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
-
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const {user,setUser,setAccessToken,setRefreshToken} = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const genderData = [
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
-    { label: 'Other', value: 'other' },
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' },
+    { label: 'Others', value: 'Others' },
   ];
 
   const onChangeDate = (event, selectedDate) => {
@@ -29,13 +35,55 @@ const PatientDetails = () => {
     setShowDatePicker(false);
   };
 
+  const handleSignup = async()=>{
+    try {
+      if(!patientEmail || !patientName || !gender || !dateOfBirth || !phoneNumber || !password || !confirmPassword){
+        Alert.alert("Missing fields","Fill all the fields");
+        return;
+      }
+      if(password!==confirmPassword){
+              Alert.alert("Password Mismatch","Your passwords do not match");
+              setConfirmPassword("");
+              return;
+      }
+      const url = `${BACKEND_URL}/users/register-patient`;
+      const response = await axios.post(url,{name:patientName,password,email:patientEmail,phNo:phoneNumber,dob:new Date(dateOfBirth).toLocaleDateString("en-GB"),gender,role:"patient"},{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      });
+      const res = await response.data;
+      if (res.success) {
+        const { accessToken, refreshToken,patient } = res.data;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setUser(patient);
+        await AsyncStorage.setItem('accessToken',accessToken);
+        await AsyncStorage.setItem('refreshToken',refreshToken);
+        await AsyncStorage.setItem('user',JSON.stringify(patient));  
+      }
+    } catch (error) {
+      console.log("Error : ",error.message);
+    }
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+
   return (
     <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Back pressed')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={30} color="#000000" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Patient Details</Text>
+        <Text style={styles.headerText}>Patient Sign Up</Text>
       </View>
 
       <View style={styles.inputContainer}>
@@ -109,9 +157,56 @@ const PatientDetails = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.continueButton}>
-        <Text style={styles.continueButtonText}>Continue</Text>
+      <View style={styles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={24} color="#B0B0B0" style={styles.icon} />
+        <TextInput
+          style={[styles.input, { color: password ? '#808080' : '#B0B0B0' }]}
+          placeholder="Enter your password"
+          placeholderTextColor="#B0B0B0"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity onPress={togglePasswordVisibility}>
+          <Ionicons
+            name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+            size={24}
+            color="#B0B0B0"
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={24} color="#B0B0B0" style={styles.icon} />
+        <TextInput
+          style={[styles.input, { color: confirmPassword ? '#808080' : '#B0B0B0' }]}
+          placeholder="Confirm your password"
+          placeholderTextColor="#B0B0B0"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry={!showConfirmPassword}
+        />
+        <TouchableOpacity onPress={toggleConfirmPasswordVisibility}>
+          <Ionicons
+            name={showConfirmPassword ? 'eye-outline' : 'eye-off-outline'}
+            size={24}
+            color="#B0B0B0"
+          />
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity onPress={handleSignup} style={styles.continueButton}>
+        <Text style={styles.continueButtonText}>Sign Up</Text>
       </TouchableOpacity>
+
+      <View style={styles.footer}>
+          <Text style={styles.footerText}>Dont have a account? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate("PatientLogin")}>
+            <Text style={styles.signInText}>Sign In</Text>
+          </TouchableOpacity>
+      </View>
+      
+      </ScrollView>
     </View>
   );
 };
@@ -185,6 +280,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
   },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+  footerText: {
+    fontSize: 18,
+    color: '#1D1D1D',
+  },
+  signInText: {
+    fontSize: 18,
+    color: '#000080',
+    fontWeight: 'bold',
+  },
 });
 
-export default PatientDetails;
+export default PatientSignUp;

@@ -4,6 +4,7 @@ import BackgroundService from 'react-native-background-actions';
 import NetInfo from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { useLogin } from '../context/LoginProvider';
 
 const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 
@@ -12,6 +13,9 @@ const Home = () => {
   const [tempName,setTempName] = useState("");
   const [tempEmail,setTempEmail] = useState("");
   const [tempPassword,setTempPassword] = useState("");
+  const {user} = useLogin();
+  console.log(user);
+  
 
     const postUser = async(user)=>{
         try {

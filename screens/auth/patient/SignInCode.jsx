@@ -1,13 +1,46 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React, { useState } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
+import { useLogin } from '../../../context/LoginProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import {BACKEND_URL} from "../../../constants/Ports";
 
-const SignInCode = () => {
+const SignInCode = ({navigation}) => {
+  const [code,setCode] = useState("");
+  const {setAccessToken,setRefreshToken,setUser} = useLogin();
+
+  const handleLogin = async()=>{
+    try {
+      if(!code){
+        Alert.alert("Missing fields","Fill all the fields");
+        return;
+      }
+      const url = `${BACKEND_URL}/users/login-code`;
+      const response = await axios.post(url,{code},{headers:{
+        "Content-Type":"application/json"
+      }})
+      const res = await response.data;
+      if (res.success) {
+        const { accessToken, refreshToken,patient } = res.data;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setUser(patient);
+        await AsyncStorage.setItem('accessToken',accessToken);
+        await AsyncStorage.setItem('refreshToken',refreshToken);
+        await AsyncStorage.setItem('user',JSON.stringify(patient));
+      }
+      setCode("");
+    } catch (error) {
+      console.log("Error : ",error.message);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Back pressed')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={30} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Sign In</Text>
@@ -22,12 +55,13 @@ const SignInCode = () => {
         <TextInput 
           placeholder="Enter your pairing code"
           placeholderTextColor="#B0B0B0"
-          keyboardType="numeric"
           style={styles.input}
+          value={code}
+          onChangeText={setCode}
         />
       </View>
 
-      <TouchableOpacity style={styles.signInButton}>
+      <TouchableOpacity onPress={handleLogin} style={styles.signInButton}>
         <Text style={styles.signInText}>Sign In</Text>
       </TouchableOpacity>
     </View>

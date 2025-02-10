@@ -1,35 +1,58 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { BACKEND_URL } from '../../../constants/Ports';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import axios from 'axios';
+import { useLogin } from '../../../context/LoginProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SignUp = () => {
+const CaretakerLogin = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
-  const [isPhoneNumberFocused, setIsPhoneNumberFocused] = useState(false);
+  const {setUser,setAccessToken,setRefreshToken} = useLogin();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
+  const handleLogin = async()=>{
+    try {
+      if(!email || !password){
+        Alert.alert("Missing fields","Fill all the fields");
+        return;
+      }
+      const url = `${BACKEND_URL}/users/login-caretaker`;
+      const response = await axios.post(url,{email,password},{headers:{
+        "Content-Type":"application/json"
+      }})
+      const res = await response.data;
+      if (res.success) {
+        const { accessToken, refreshToken,caretaker } = res.data;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setUser(caretaker);
+        await AsyncStorage.setItem('accessToken',accessToken);
+        await AsyncStorage.setItem('refreshToken',refreshToken);
+        await AsyncStorage.setItem('user',JSON.stringify(caretaker));
+      }
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Back pressed')}>
+        <TouchableOpacity onPress={() => navigation.goBack()} >
           <AntDesign name="left" size={30} color="#000000" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Sign Up</Text>
+        <Text style={styles.headerText}>Caretaker Sign In</Text>
       </View>
 
       <View style={styles.inputContainer}>
@@ -68,49 +91,14 @@ const SignUp = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.inputContainer}>
-        <Ionicons name="lock-closed-outline" size={24} color="#B0B0B0" style={styles.icon} />
-        <TextInput
-          style={[styles.input, { color: isConfirmPasswordFocused || confirmPassword ? '#808080' : '#B0B0B0' }]}
-          placeholder="Confirm your password"
-          placeholderTextColor="#B0B0B0"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry={!showConfirmPassword}
-          onFocus={() => setIsConfirmPasswordFocused(true)}
-          onBlur={() => setIsConfirmPasswordFocused(false)}
-        />
-        <TouchableOpacity onPress={toggleConfirmPasswordVisibility}>
-          <Ionicons
-            name={showConfirmPassword ? 'eye-outline' : 'eye-off-outline'}
-            size={24}
-            color="#B0B0B0"
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Ionicons name="call-outline" size={24} color="#B0B0B0" style={styles.icon} />
-        <TextInput
-          style={[styles.input, { color: isPhoneNumberFocused || phoneNumber ? '#808080' : '#B0B0B0' }]}
-          placeholder="Enter your phone number"
-          placeholderTextColor="#B0B0B0"
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
-          onFocus={() => setIsPhoneNumberFocused(true)}
-          onBlur={() => setIsPhoneNumberFocused(false)}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.signUpButton}>
-        <Text style={styles.signUpButtonText}>Sign Up</Text>
+      <TouchableOpacity onPress={handleLogin} style={styles.signUpButton}>
+        <Text style={styles.signUpButtonText}>Sign In</Text>
       </TouchableOpacity>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => console.log('Sign In pressed')}>
-          <Text style={styles.signInText}>Sign In</Text>
+        <Text style={styles.footerText}>Dont have a account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text style={styles.signInText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -187,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default CaretakerLogin;

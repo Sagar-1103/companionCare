@@ -5,21 +5,22 @@ import Home from '../components/Home';
 import Camera from '../components/Camera';
 import Maps from '../components/Maps';
 import Logo from "../assets/Logo.png";
+import MedicationDemo from "../testScreens/MedicationDemo";
 
 const Tab = createBottomTabNavigator();
 
 const tabData = [
     {
-        name: 'Home',
-        component: Home,
+        name: 'Medication',
+        component: MedicationDemo,
         icons: {
             inactive: Logo,
             active: Logo,
         },
     },
     {
-        name: 'Camera',
-        component: Camera,
+        name: 'Home',
+        component: Home,
         icons: {
             inactive: Logo,
             active: Logo,

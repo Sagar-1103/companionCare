@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Maps from "../components/Maps";
-import Home from "../components/Home";
-import Camera from "../components/Camera";
-import SplashScreen from '../screens/auth/SplashScreen';
+import SplashScreen from '../screens/common/SplashScreen';
 import TabNavigation from './TabNavigation';
+import { useLogin } from '../context/LoginProvider';
+import ChooseRole from '../screens/auth/common/ChooseRole';
+import CareTakerChoiceScreen from '../screens/auth/patient/CareTakerChoiceScreen';
+import DiseaseSelectionScreen from '../screens/auth/common/DiseaseSelectionScreen';
+import GetStartedScreen from '../screens/auth/GetStartedScreen';
+import PatientDetails from '../screens/auth/common/PatientDetailsScreen';
+import SignInCode from '../screens/auth/patient/SignInCode';
+import SignUp from '../screens/auth/caretaker/SignUp';
+import PatientSignUp from '../screens/auth/patient/PatientSignUp';
+import CaretakerLogin from '../screens/auth/caretaker/CaretakerLogin';
+import PatientLogin from '../screens/auth/patient/PatientLogin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
     const [loading,setLoading] = useState(true);
+    const {user,setUser,setAccessToken,setRefreshToken,done,setDone,setMedications} = useLogin();
+    
     useEffect(()=>{
         storageAccess();
         setTimeout(()=>{
@@ -18,7 +29,18 @@ const AppNavigator = () => {
     },[])
 
     const storageAccess = async()=>{
-            
+            const tempUser = await AsyncStorage.getItem('user');
+            const tempAccessToken = await AsyncStorage.getItem('accessToken');
+            const tempRefreshToken = await AsyncStorage.getItem('refreshToken');
+            const tempDone = await AsyncStorage.getItem('done');
+            const tempMedications = await AsyncStorage.getItem('medications');
+            setMedications(JSON.parse(tempMedications));
+            setUser(JSON.parse(tempUser));
+            setAccessToken(tempAccessToken);
+            setRefreshToken(tempRefreshToken);
+            if(tempDone==="true"){
+                setDone(true);
+            }
     }
 
     if (loading) {
@@ -28,18 +50,67 @@ const AppNavigator = () => {
             </Stack.Navigator>
           );
     }
-    // return (
-    //         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="Home"  >
-    //                 <Stack.Screen name="Home" component={Home}/>
-    //                 <Stack.Screen name="Camera" component={Camera}/>
-    //                 <Stack.Screen name="Maps" component={Maps}/>
-    //         </Stack.Navigator>
-    // );
-    return (
-        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
-                <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+
+    if(!user){
+        return (
+            <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="ChooseRole"  >
+            <Stack.Screen name="ChooseRole" component={ChooseRole}/>
+            <Stack.Screen name="CareTakerChoiceScreen" component={CareTakerChoiceScreen}/>
+            <Stack.Screen name="SignUp" component={SignUp}/>
+            <Stack.Screen name="SignInCode" component={SignInCode}/>
+            <Stack.Screen name="PatientSignUp" component={PatientSignUp}/>
+            <Stack.Screen name="PatientLogin" component={PatientLogin}/>
+            <Stack.Screen name="CaretakerLogin" component={CaretakerLogin}/>                                  
         </Stack.Navigator>
-);
+        );
+    }
+    
+    if(user.role==="caretaker" && !user.patientId){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="PatientDetails"  >
+                    <Stack.Screen name="PatientDetails" component={PatientDetails}/>
+        </Stack.Navigator>
+        );
+    }
+
+    if(user.role==="caretaker" && user.patientId && !done){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="DiseaseSelectionScreen"  >
+                    <Stack.Screen name="DiseaseSelectionScreen" component={DiseaseSelectionScreen}/>
+        </Stack.Navigator>
+        );
+    }
+
+    if(user.role==="caretaker" && user.patientId){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
+                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+        </Stack.Navigator>
+        );
+    }
+
+    if(user.role==="patient" && !user.caretakerId && !user.diseases?.length){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="DiseaseSelectionScreen"  >
+                    <Stack.Screen name="DiseaseSelectionScreen" component={DiseaseSelectionScreen}/>
+        </Stack.Navigator>
+        );
+    }
+    if(user.role==="patient" && !user.caretakerId){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
+                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+        </Stack.Navigator>
+        );
+    }
+    if(user.role==="patient" && user.caretakerId){
+        return (
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
+                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+        </Stack.Navigator>
+        );
+    }
+    return null;
         
 };
 
