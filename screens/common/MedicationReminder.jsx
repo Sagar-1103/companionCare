@@ -57,7 +57,7 @@ const MedicationReminder = () => {
         <ScrollView contentContainerStyle={[styles.container, { backgroundColor: '#fff' }]}>
           <View style={[styles.header, { backgroundColor: 'rgb(111, 162, 189)' }]}>
             <Image
-              source={require('../assets/medBg.png')}
+              source={require('../../assets/medBg.png')}
               style={styles.headerImage}
             />
           </View>
