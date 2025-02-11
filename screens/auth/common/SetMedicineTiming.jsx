@@ -36,7 +36,7 @@ const SetMedicineTiming = ({ navigation }) => {
                 ? Ionicons
                 : MaterialCommunityIcons;
 
-            const iconColor = dates[index] ? '#001f3f' : '#888'; 
+            const iconColor = dates[index] ? '#001f3f' : '#BBB'; 
             return (
               <View key={index} style={styles.mealRow}>
                 <View style={styles.iconContainer}>
