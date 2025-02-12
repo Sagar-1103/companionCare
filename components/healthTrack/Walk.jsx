@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
   },
   centerTextContainer: {
     position: 'absolute',
-    top: '47%',
-    left: '43%',
+    top: '45%',
+    left: '47%',
     transform: [{ translateX: -20 }, { translateY: -20 }],
     alignItems: 'center',
   },
