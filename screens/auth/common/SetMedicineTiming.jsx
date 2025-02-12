@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useLogin } from '../../../context/LoginProvider';
+import { BACKEND_URL } from '../../../constants/Ports';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const mealTimings = [
   { name: 'Breakfast', icon: 'free-breakfast', type: MaterialIcons },
@@ -15,6 +19,42 @@ const mealTimings = [
 const SetMedicineTiming = ({ navigation }) => {
   const [dates, setDates] = useState([null, null, null, null]);
   const [openIndex, setOpenIndex] = useState(null);
+  const {user,setDone} = useLogin();
+  const patientId = user.role==="caretaker" ? user.patientId : user.id;
+
+  const handleContinue = async()=>{
+    try {
+      if(!dates || !dates.length){
+        Alert.alert("Missing fields","Fill all the fields");
+        return;
+      }
+      const [breakfast,lunch,snacks,dinner] = dates;
+      if(!breakfast || !lunch || !snacks || !dinner){
+        Alert.alert("Missing fields","Fill all the fields");
+        return;
+      }
+      const url = `${BACKEND_URL}/medications/set-time/${patientId}`;
+      console.log(url);
+      const response = await axios.post(url,{breakfast,lunch,snacks,dinner},{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      })
+
+      const res = await response.data;
+      if(res.success){
+        if(user.role==="caretaker"){
+          navigation.navigate("SetSpeedDial");
+        }
+        if(user.role==="patient"){
+          setDone("true");
+          await AsyncStorage.setItem('done',"true");
+        }
+      }
+    } catch (error) {
+      console.log("Error : ",error.message || error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -76,7 +116,7 @@ const SetMedicineTiming = ({ navigation }) => {
         />
       )}
 
-      <TouchableOpacity style={styles.signInButton}>
+      <TouchableOpacity onPress={handleContinue} style={styles.signInButton}>
         <Text style={styles.signInButtonText}>Continue</Text>
       </TouchableOpacity>
     </View>

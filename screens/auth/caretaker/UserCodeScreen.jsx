@@ -6,13 +6,22 @@ import {
   StyleSheet,
 } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useLogin } from '../../../context/LoginProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const UserCodeScreen = ({navigation}) => {
+  const {user,setDone} = useLogin();
 
   const handleSubmit = async()=>{
-    //logic to be added
+    try {
+      setDone("true");
+      await AsyncStorage.setItem('done',"true");
+    } catch (error) {
+      console.log("Error : ",error);
+    }
   }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
@@ -24,7 +33,7 @@ const UserCodeScreen = ({navigation}) => {
       <Text style={styles.InnerText}>Share the below code to pair with your user</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.inputText}> 
-            efewh
+            {user.code}
         </Text>
       </View>
       <TouchableOpacity onPress={handleSubmit} style={styles.signInButton}>

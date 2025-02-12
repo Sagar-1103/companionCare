@@ -1,1 +1,1 @@
-export const BACKEND_URL = `https://sad-breads-yawn.loca.lt`;
+export const BACKEND_URL = `https://stale-apples-film.loca.lt`;

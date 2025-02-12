@@ -13,9 +13,7 @@ const Home = () => {
   const [tempName,setTempName] = useState("");
   const [tempEmail,setTempEmail] = useState("");
   const [tempPassword,setTempPassword] = useState("");
-  const {user} = useLogin();
-  console.log(user);
-  
+  const {setUser} = useLogin();
 
     const postUser = async(user)=>{
         try {
@@ -108,7 +106,14 @@ const Home = () => {
       console.log('Error : ', error);
     }
   };
-
+  const handleLogout = async()=>{
+    try {
+      await AsyncStorage.clear();
+      setUser(null);
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
   return (
     <View style={styles.container}>
       <Text style={{color: 'white', fontSize: 30, fontWeight: 600}}>Home</Text>
@@ -164,6 +169,19 @@ const Home = () => {
         }}>
         <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
           Post User
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={handleLogout}
+        style={{
+          backgroundColor: 'powderblue',
+          paddingHorizontal: 30,
+          paddingVertical: 12,
+          borderRadius: 20,
+          marginVertical: 10,
+        }}>
+        <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
+          Logout User
         </Text>
       </TouchableOpacity>
     </View>

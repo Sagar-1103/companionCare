@@ -21,6 +21,8 @@ const PatientDetails = ({navigation}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const {user,setUser} = useLogin();
+  // console.log(user);
+  
   
   const genderData = [
     { label: 'Male', value: 'Male' },
