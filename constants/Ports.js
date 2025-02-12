@@ -1,1 +1,1 @@
-export const BACKEND_URL = `https://itchy-melons-design.loca.lt`;
+export const BACKEND_URL = `https://fluffy-oranges-dress.loca.lt`;
