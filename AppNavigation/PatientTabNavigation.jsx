@@ -5,13 +5,14 @@ import Home from '../components/Home';
 import Logo from "../assets/Logo.png";
 import HealthTrackerScreen from '../screens/common/HealthTrackerScreen';
 import MedicationReminder from '../screens/common/MedicationReminder';
+import ChatScreen from '../testScreens/ChatScreen';
 
 const Tab = createBottomTabNavigator();
 
 const tabData = [
     {
         name: 'Home',
-        component: HealthTrackerScreen,
+        component: ChatScreen,
         icons: {
             inactive: Logo,
             active: Logo,
@@ -26,8 +27,8 @@ const tabData = [
         },
     },
     {
-        name: 'Profile',
-        component: Home,
+        name: 'Chat',
+        component: ChatScreen,
         icons: {
             inactive: Logo,
             active: Logo,
