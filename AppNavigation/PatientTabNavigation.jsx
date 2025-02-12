@@ -2,34 +2,32 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Image } from 'react-native';
 import Home from '../components/Home';
-import Camera from '../components/Camera';
-import Maps from '../components/Maps';
 import Logo from "../assets/Logo.png";
-import MedicationDemo from "../testScreens/MedicationDemo";
-import FallDetectionDemo from '../testScreens/FallDetectionDemo';
+import HealthTrackerScreen from '../screens/common/HealthTrackerScreen';
+import MedicationReminder from '../screens/common/MedicationReminder';
 
 const Tab = createBottomTabNavigator();
 
 const tabData = [
     {
-        name: 'Fall',
-        component: FallDetectionDemo,
-        icons: {
-            inactive: Logo,
-            active: Logo,
-        },
-    },
-    {
         name: 'Home',
-        component: Home,
+        component: HealthTrackerScreen,
         icons: {
             inactive: Logo,
             active: Logo,
         },
     },
     {
-        name: 'Maps',
-        component: Maps,
+        name: 'Medication',
+        component: MedicationReminder,
+        icons: {
+            inactive: Logo,
+            active: Logo,
+        },
+    },
+    {
+        name: 'Profile',
+        component: Home,
         icons: {
             inactive: Logo,
             active: Logo,
@@ -37,7 +35,7 @@ const tabData = [
     },
 ];
 
-const TabNavigation = () => {
+const PatientTabNavigation = () => {
     return (
         <Tab.Navigator
             screenOptions={{
@@ -86,4 +84,4 @@ const TabNavigation = () => {
     );
 };
 
-export default TabNavigation;
+export default PatientTabNavigation;

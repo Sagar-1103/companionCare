@@ -13,7 +13,7 @@ const CaretakerLogin = ({navigation}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const {setUser,setAccessToken,setRefreshToken} = useLogin();
+  const {setUser,setDiseases,setAccessToken,setRefreshToken,setDone} = useLogin();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -32,9 +32,18 @@ const CaretakerLogin = ({navigation}) => {
       const res = await response.data;
       if (res.success) {
         const { accessToken, refreshToken,caretaker } = res.data;
+        const url = `${BACKEND_URL}/users/current-patient/${caretaker.patientId}`;
+        const response1 = await axios.get(url);
+        const res1 = await response1.data;
+        const tempUser = res1.data.patient; 
+        console.log(tempUser);
+        setDiseases(tempUser.diseases);
+        await AsyncStorage.setItem('diseases',JSON.stringify(tempUser.diseases));
+        setDone(true);
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setUser(caretaker);
+        await AsyncStorage.setItem('done',"true");
         await AsyncStorage.setItem('accessToken',accessToken);
         await AsyncStorage.setItem('refreshToken',refreshToken);
         await AsyncStorage.setItem('user',JSON.stringify(caretaker));

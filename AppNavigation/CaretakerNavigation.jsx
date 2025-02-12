@@ -2,17 +2,17 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {Image} from 'react-native';
 import Home from '../components/Home';
-import Maps from '../components/Maps';
 import Logo from '../assets/Logo.png';
-import FallDetectionDemo from '../testScreens/FallDetectionDemo';
-import MedicationReminder from "../screens/common/MedicationReminder";
+import MedicationReminder from '../screens/common/MedicationReminder';
+import HealthTrackerScreen from '../screens/common/HealthTrackerScreen';
+import {useLogin} from '../context/LoginProvider';
 
 const Tab = createBottomTabNavigator();
 
 const tabData = [
   {
     name: 'Home',
-    component: FallDetectionDemo,
+    component: HealthTrackerScreen,
     icons: {
       inactive: Logo,
       active: Logo,
@@ -36,7 +36,7 @@ const tabData = [
   },
   {
     name: 'Profile',
-    component: Maps,
+    component: Home,
     icons: {
       inactive: Logo,
       active: Logo,
@@ -45,6 +45,8 @@ const tabData = [
 ];
 
 const CaretakerTabNavigator = () => {
+  const {diseases} = useLogin();
+  const hasAlzheimer = diseases.some(disease => disease.diseaseName.toLowerCase().includes("alzheimer"));;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -69,24 +71,30 @@ const CaretakerTabNavigator = () => {
           margin: 0,
         },
       }}>
-      {tabData.map((tab, index) => (
-        <Tab.Screen
-          key={index}
-          name={tab.name}
-          component={tab.component}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Image
-                source={focused ? tab.icons.active : tab.icons.inactive}
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-              />
-            ),
-          }}
-        />
-      ))}
+      {tabData.map((tab, index) => {
+        if (!hasAlzheimer && tab.name === 'Location') {
+          return;
+        } else {
+          return (
+            <Tab.Screen
+              key={index}
+              name={tab.name}
+              component={tab.component}
+              options={{
+                tabBarIcon: ({focused}) => (
+                  <Image
+                    source={focused ? tab.icons.active : tab.icons.inactive}
+                    style={{
+                      width: 24,
+                      height: 24,
+                    }}
+                  />
+                ),
+              }}
+            />
+          );
+        }
+      })}
     </Tab.Navigator>
   );
 };

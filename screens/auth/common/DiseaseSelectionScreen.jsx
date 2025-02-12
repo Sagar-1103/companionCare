@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DiseaseSelectionScreen = ({navigation}) => {
 
-  const {user,setUser} = useLogin();
+  const {user,setUser,setDiseases} = useLogin();
   const patientId = user.role==="caretaker" ? user.patientId : user.id;
   const diseases = [
     {diseaseId:1,diseaseName:"Diabetes"},
@@ -56,6 +56,10 @@ const DiseaseSelectionScreen = ({navigation}) => {
           const tempUser = res1.data.patient; 
           setUser(tempUser);
           await AsyncStorage.setItem('user',JSON.stringify(tempUser));
+        }
+        if(user.role==="caretaker"){
+          setDiseases(selectedDiseases);
+          await AsyncStorage.setItem('diseases',JSON.stringify(selectedDiseases));
         }
         return navigation.navigate("SetMedicineTiming");
       }

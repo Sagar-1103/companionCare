@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from '../screens/common/SplashScreen';
-import TabNavigation from './TabNavigation';
+import PatientTabNavigation from './PatientTabNavigation';
 import { useLogin } from '../context/LoginProvider';
 import ChooseRole from '../screens/auth/common/ChooseRole';
 import CareTakerChoiceScreen from '../screens/auth/patient/CareTakerChoiceScreen';
@@ -24,7 +24,7 @@ const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
     const [loading,setLoading] = useState(true);
-    const {user,setUser,setAccessToken,setRefreshToken,done,setDone,setMedications} = useLogin();
+    const {user,setUser,setDiseases,setAccessToken,setRefreshToken,done,setDone,setMedications} = useLogin();
     
     useEffect(()=>{
         storageAccess();
@@ -39,8 +39,10 @@ const AppNavigator = () => {
             const tempRefreshToken = await AsyncStorage.getItem('refreshToken');
             const tempDone = await AsyncStorage.getItem('done');
             const tempMedications = await AsyncStorage.getItem('medications');
+            const tempDiseases = await AsyncStorage.getItem('diseases');
             setMedications(JSON.parse(tempMedications));
             setUser(JSON.parse(tempUser));
+            setDiseases(JSON.parse(tempDiseases));
             setAccessToken(tempAccessToken);
             setRefreshToken(tempRefreshToken);
             if(tempDone==="true"){
@@ -98,7 +100,7 @@ const AppNavigator = () => {
         );
     }
 
-    if(user.role==="patient" && !user.caretakerId && !done){
+    if(user.role==="patient" && !done && !user.caretakerId ){
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="DiseaseSelectionScreen"  >
                     <Stack.Screen name="DiseaseSelectionScreen" component={DiseaseSelectionScreen}/>
@@ -106,17 +108,17 @@ const AppNavigator = () => {
         </Stack.Navigator>
         );
     }
-    if(user.role==="patient" && !user.caretakerId){
+    if(user.role==="patient" && done && !user.caretakerId){
         return (
-        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
-                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="PatientTabNavigation"  >
+                    <Stack.Screen name="PatientTabNavigation" component={PatientTabNavigation}/>
         </Stack.Navigator>
         );
     }
     if(user.role==="patient" && user.caretakerId){
         return (
-        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
-                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="PatientTabNavigation"  >
+                    <Stack.Screen name="PatientTabNavigation" component={PatientTabNavigation}/>
         </Stack.Navigator>
         );
     }

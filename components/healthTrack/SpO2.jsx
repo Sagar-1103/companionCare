@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     color: 'black',
     top: '-8%',
-    left: '-17%'
+    left: '-10%'
   },
   circleContainer: {
     width: 140, 

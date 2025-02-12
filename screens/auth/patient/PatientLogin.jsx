@@ -13,7 +13,7 @@ const PatientLogin = ({navigation}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
-  const {setUser,setRefreshToken,setAccessToken} = useLogin();
+  const {setUser,setRefreshToken,setAccessToken,setDone} = useLogin();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -32,6 +32,8 @@ const PatientLogin = ({navigation}) => {
       const res = await response.data;
       if (res.success) {
         const { accessToken, refreshToken,patient } = res.data;
+        setDone(true);
+        await AsyncStorage.setItem('done',"true");
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setUser(patient);

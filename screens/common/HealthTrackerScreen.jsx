@@ -3,9 +3,9 @@ import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Modal, Button } f
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
 import Walk from '../../components/healthTrack/Walk';
-import Sleep from '../../components/healthTrack/healthTrack/Sleep';
-import Heart from '../../components/healthTrack/healthTrack/Heart';
-import SpO2 from '../../components/healthTrack/healthTrack/SpO2';
+import Sleep from '../../components/healthTrack/Sleep';
+import Heart from '../../components/healthTrack/Heart';
+import SpO2 from '../../components/healthTrack/SpO2';
 
 const mockData = {
   '2025-02-12': { walk: { value: '8104', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '95', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
@@ -48,6 +48,7 @@ const HealthTrackerScreen = () => {
 
   return (
     <View style={styles.container}>
+      <ScrollView>
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{ marginLeft: '5%' }}>
           <MaterialIcons name="calendar-month" size={36} color="#000" />
@@ -105,6 +106,7 @@ const HealthTrackerScreen = () => {
           <SpO2 value={selectedDateData.spo2.value} unit={selectedDateData.spo2.unit} />
         </View>
       </View>
+      </ScrollView>
     </View>
   );
 };
@@ -125,12 +127,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   todayDate: {
-    fontSize: 40,
+    fontSize: 32,
     fontWeight: '900',
     color: '#000',
   },
   todayDay: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#555',
     marginBottom: -5,
     marginLeft: '3%',
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
   },
   gridContainer: {
-    marginBottom: '14%',
+    // marginBottom: '-24%',
   },
   row: {
     flexDirection: 'row',

@@ -106,7 +106,7 @@ const MedicationReminder = () => {
                     onValueChange={(itemValue) => setMedicineType(itemValue)}
                     style={{ flex: 1, color: medicineType ? '#000' : '#888', paddingLeft:'6%' }}
                 >
-                    <Picker.Item style={{ fontSize: 19 }} label="Type..." value="" enabled={false} />
+                    <Picker.Item style={{ fontSize: 19 }} label="Type..." value="" enabled={true} />
                     <Picker.Item style={{ fontSize: 19 }} label="Pills" value="Pills" />
                     <Picker.Item style={{ fontSize: 19 }} label="Syrup" value="Syrup" />
                     <Picker.Item style={{ fontSize: 19 }} label="Injection" value="Injection" />
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerImage: {
-    width: '92%',
+    width: '85%',
     height: '92%',
     marginTop: '5%'
   },
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     width: '15%',
   },
   mealText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 'bold',
     marginTop: 5,
     color: '#AAA',
