@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Modal, Button } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
@@ -6,25 +6,21 @@ import Walk from '../../components/healthTrack/Walk';
 import Sleep from '../../components/healthTrack/Sleep';
 import Heart from '../../components/healthTrack/Heart';
 import SpO2 from '../../components/healthTrack/SpO2';
-
-const mockData = {
-  '2025-02-12': { walk: { value: '8104', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '95', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
-  '2025-02-11': { walk: { value: '7500', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '90', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
-  '2025-02-10': { walk: { value: '6543', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '92', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
-  '2025-02-09': { walk: { value: '2222', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '94', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
-  '2025-02-08': { walk: { value: '7865', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '95', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
-  '2025-02-07': { walk: { value: '8886', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '96', unit: 'bpm' }, spo2: { value: '96', unit: '%' } },
-  '2025-02-06': { walk: { value: '7522', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '96', unit: 'bpm' }, spo2: { value: '96', unit: '%' } },
-  '2025-02-05': { walk: { value: '7321', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '98', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
-  '2025-02-04': { walk: { value: '6543', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '94', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
-  '2025-02-03': { walk: { value: '7111', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '91', unit: 'bpm' }, spo2: { value: '95', unit: '%' } },
-};
+import {
+  initialize,
+  readRecords,
+} from 'react-native-health-connect';
 
 const HealthTrackerScreen = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [stepsData, setStepsData] = useState(0);
+  const [heartData, setHeartData] = useState(0);
+  const [spo2Data, setSpO2Data] = useState(0);
+  const [sleepData, setSleepData] = useState(0);
+  
   const today = new Date();
-  const dates = Array.from({ length: 30 }, (_, i) => {
+  const dates = Array.from({ length: 10 }, (_, i) => {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     return date;
@@ -32,6 +28,7 @@ const HealthTrackerScreen = () => {
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
+    fetchHealthData(date);
     setShowDatePicker(false); 
   };
 
@@ -39,11 +36,55 @@ const HealthTrackerScreen = () => {
     return date.toISOString().split('T')[0];
   };
 
-  const selectedDateData = mockData[formatDate(selectedDate)] || {
-    walk: { value: '0', unit: 'Steps' },
-    sleep: { value: '0', unit: 'Hrs' },
-    heart: { value: '0', unit: 'bpm' },
-    spo2: { value: '0', unit: '%' },
+  useEffect(() => {
+    const initializeHealthConnect = async () => {
+      try {
+        const isInitialized = await initialize();
+        console.log('Health Connect initialized:', isInitialized);
+      } catch (error) {
+        console.error('Health Connect initialization error:', error);
+      }
+    };
+    initializeHealthConnect();
+    fetchHealthData(selectedDate);
+  }, []);
+
+  const fetchHealthData = async (date) => {
+    try {
+      const startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+      const endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString();
+      
+      const { records: stepRecords } = await readRecords('Steps', {
+        timeRangeFilter: { operator: 'between', startTime, endTime },
+      });
+      const totalSteps = stepRecords.reduce((total, record) => total + record.count, 0);
+      setStepsData(totalSteps);
+      
+      const { records: heartRecords } = await readRecords('HeartRate', {
+        timeRangeFilter: { operator: 'between', startTime, endTime },
+      });
+      const avgHeartRate = heartRecords.length > 0 ? (heartRecords.reduce((total, record) => total + record.samples[0].beatsPerMinute, 0) / heartRecords.length).toFixed(0) : 0;
+      setHeartData(avgHeartRate);
+      
+      const { records: spo2Records } = await readRecords('OxygenSaturation', {
+        timeRangeFilter: { operator: 'between', startTime, endTime },
+      });
+      const avgSpO2 = spo2Records.length > 0 ? (spo2Records.reduce((total, record) => total + record.percentage, 0) / spo2Records.length).toFixed(0) : 0;
+      setSpO2Data(avgSpO2);
+
+      const { records:sleepRecords } = await readRecords('SleepSession', {
+        timeRangeFilter: { operator: 'between', startTime, endTime },
+      });
+      const totalSleepMs = sleepRecords.reduce((total, record) => {
+        const durationMs = new Date(record.endTime).getTime() - new Date(record.startTime).getTime();
+        return total + durationMs;
+      }, 0);
+      const totalSleepHours = Math.floor(totalSleepMs / (1000 * 60 * 60));
+      setSleepData(totalSleepHours);
+      console.log(`Health data for ${date.toDateString()}:`, { totalSteps, avgHeartRate, avgSpO2 });
+    } catch (error) {
+      console.error('Error reading health data:', error);
+    }
   };
 
   return (
@@ -54,8 +95,8 @@ const HealthTrackerScreen = () => {
           <MaterialIcons name="calendar-month" size={36} color="#000" />
         </TouchableOpacity>
         <View style={styles.todayContainer}>
-          <Text style={styles.todayDay}>{today.toLocaleString('default', { weekday: 'long' })}</Text>
-          <Text style={styles.todayDate}>{today.toLocaleString('default', { day: 'numeric', month: 'long' })}</Text>
+          <Text style={styles.todayDay}>{selectedDate.toLocaleString('default', { weekday: 'long' })}</Text>
+          <Text style={styles.todayDate}>{selectedDate.toLocaleString('default', { day: 'numeric', month: 'long' })}</Text>
         </View>
       </View>
 
@@ -98,12 +139,12 @@ const HealthTrackerScreen = () => {
 
       <View style={styles.gridContainer}>
         <View style={styles.row}>
-          <Walk value={selectedDateData.walk.value} unit={selectedDateData.walk.unit} />
-          <Sleep value={selectedDateData.sleep.value} unit={selectedDateData.sleep.unit} />
+          <Walk value={stepsData} unit={`Steps`} />
+          <Sleep value={sleepData} unit={`Hrs`} />
         </View>
         <View style={styles.row}>
-          <Heart value={selectedDateData.heart.value} unit={selectedDateData.heart.unit} />
-          <SpO2 value={selectedDateData.spo2.value} unit={selectedDateData.spo2.unit} />
+          <Heart value={heartData} unit={`bpm`} />
+          <SpO2 value={spo2Data} unit={`%`} />
         </View>
       </View>
       </ScrollView>

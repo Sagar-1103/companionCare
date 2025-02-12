@@ -5,11 +5,11 @@ import PieChart from 'react-native-pie-chart';
 
 const Walk = ({ value, unit }) => {
   const completed = parseInt(value);
-  const remaining = 10000 - completed;
+  const remaining = 30000 - completed;
 
   const series = [
     { value: completed, color: 'rgb(14, 14, 125)' },
-    { value: 10000 - completed, color: '#eeeeee' },
+    { value: remaining, color: '#eeeeee' },
   ];
 
   return (

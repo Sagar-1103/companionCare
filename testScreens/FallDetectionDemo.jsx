@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Platform,TextInput, StyleSheet } from "react-native";
-import { useLogin } from "../context/LoginProvider";
+import { View, Text, TouchableOpacity, Platform,TextInput, StyleSheet, PermissionsAndroid } from "react-native";
 import { BACKEND_URL } from "../constants/Ports";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,7 +15,21 @@ const FallDetectionDemo = () => {
     const [gyroSubscription, setGyroSubscription] = useState(null);
     const [latestAcceleration, setLatestAcceleration] = useState({ x: 0, y: 0, z: 0 });
     const [latestGyroscope, setLatestGyroscope] = useState({ x: 0, y: 0, z: 0 });
-    const {user} = useLogin(); 
+
+    const requestNotificationPermission = async () => {
+      if (Platform.OS === 'android' && Platform.Version >= 33) {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+          console.log("Notification permission denied");
+        }
+      }
+    };
+
+    useEffect(() => {
+      requestNotificationPermission();
+    }, []);
   
   const startBackgroundService = async () => {
     const veryIntensiveTask = async (taskDataArguments) => {
@@ -80,7 +93,7 @@ const FallDetectionDemo = () => {
     const showNotification = () => {
         PushNotification.localNotification({
           channelId: "Patient-alert",
-          title: `${user.name} : Accidental Fall`,
+          title: `: Accidental Fall`,
           message: 'If your phone has accidently fallen then click the notification',
         });
       };
