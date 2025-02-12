@@ -64,7 +64,7 @@ const SetMedicineTiming = ({ navigation }) => {
 
       <Text style={styles.title}>Select Time</Text>
       <Text style={styles.InnerText}>Set up your food timings</Text>
-      <Text style={styles.InnerLine}>______________________________</Text>
+      {/* <Text style={styles.InnerLine}>______________________________</Text> */}
 
       <View>
         <View style={styles.mealContainer}>

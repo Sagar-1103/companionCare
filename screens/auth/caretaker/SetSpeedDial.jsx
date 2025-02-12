@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { BACKEND_URL } from '../../../constants/Ports';
 import { useLogin } from '../../../context/LoginProvider';
 import axios from 'axios';
@@ -86,7 +87,7 @@ const SetSpeedDial = ({navigation}) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backContainer}>
-          <Icon name="arrow-back" size={30} color="#000" />
+          <Ionicons name="chevron-back" size={30} color="#000" />
         </TouchableOpacity>
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Set Speed Dial</Text>
@@ -200,6 +201,7 @@ const styles = StyleSheet.create({
   backContainer: {
     marginBottom: '0%',
     top: '4.6%',
+    left: '4%'
   },
   headerContainer: {
     marginBottom: 30,
