@@ -3,12 +3,12 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'rea
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useLogin } from '../../../context/LoginProvider';
 import {BACKEND_URL} from "../../../constants/Ports";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DiseaseSelectionScreen = ({navigation}) => {
 
-  const {user,setDone,setUser} = useLogin();
+  const {user,setUser} = useLogin();
   const patientId = user.role==="caretaker" ? user.patientId : user.id;
   const diseases = [
     {diseaseId:1,diseaseName:"Diabetes"},
@@ -41,10 +41,6 @@ const DiseaseSelectionScreen = ({navigation}) => {
 
   const handleContinue = async()=>{
     try {
-      // if(!selectedDiseases.length){
-      //   Alert.alert("Missing fields","Fill all the fields");
-      //   return;
-      // }
       const url = `${BACKEND_URL}/users/set-diseases/${patientId}`;
       const response = await axios.post(url,{diseaseList:selectedDiseases},{
         headers:{
@@ -53,12 +49,15 @@ const DiseaseSelectionScreen = ({navigation}) => {
       });
       const res = await response.data;
       if (res.success) {
-        const url = `${BACKEND_URL}/users/current-patient/${user.id}`;
-        const response1 = await axios.get(url);
-        const res1 = await response1.data;
-        const tempUser = res1.data.patient; 
-        setUser(tempUser);
-        await AsyncStorage.setItem('user',JSON.stringify(tempUser));
+        if(user.role==="patient"){
+          const url = `${BACKEND_URL}/users/current-patient/${user.id}`;
+          const response1 = await axios.get(url);
+          const res1 = await response1.data;
+          const tempUser = res1.data.patient; 
+          setUser(tempUser);
+          await AsyncStorage.setItem('user',JSON.stringify(tempUser));
+        }
+        return navigation.navigate("SetMedicineTiming");
       }
     } catch (error) {
       console.log("Error : ",error);

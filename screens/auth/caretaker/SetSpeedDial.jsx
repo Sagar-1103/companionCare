@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,28 +6,86 @@ import {
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
+  Image,
+  Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; 
+import ImagePicker from 'react-native-image-crop-picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { BACKEND_URL } from '../../../constants/Ports';
+import { useLogin } from '../../../context/LoginProvider';
+import axios from 'axios';
 
-const SetSpeedDial = ({ navigation }) => {
-  const [contact1, setContact1] = useState({ name: '', phNo: '' });
-  const [contact2, setContact2] = useState({ name: '', phNo: '' });
+const SetSpeedDial = ({navigation}) => {
+  const [contact1, setContact1] = useState({name: '', phNo: ''});
+  const [contact2, setContact2] = useState({name: '', phNo: ''});
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const {user} = useLogin();
 
-  const handleSubmit = () => {
-    if (!contact1.name || !contact1.phNo || !contact2.name || !contact2.phNo) {
-      alert('Please ensure all fields are filled in correctly before proceeding.');
+  const handleSubmit = async() => {
+    if (!contact1.name || !contact1.phNo || !contact2.name || !contact2.phNo || !image1 || !image2) {
+      Alert.alert(
+        "Missing fields","Please ensure all fields are filled in correctly before proceeding."
+      );
       return;
+    }
+    try {
+      const url = `${BACKEND_URL}/users/speed-dials/${user.patientId}`;
+    const response = await axios.post(url,{name1:contact1.name,name2:contact2.name,phNo1:contact1.phNo,phNo2:contact2.phNo,imageBase64_1:image1.data,imageBase64_2:image2.data},{
+      headers:{
+        "Content-Type":"application/json"
+      }
+    });
+
+    const res = await response.data;
+    if(res.success){
+      const url = `${BACKEND_URL}/users/current-patient/${user.patientId}`;
+      const response1 = await axios.get(url);
+      const res1 = await response1.data;
+      const diseases = res1.data.patient?.diseases; 
+      if(diseases.length){
+        const hasAlzheimer = diseases.some(disease => disease.diseaseName.toLowerCase().includes("alzheimer"));
+        if(hasAlzheimer){
+          return navigation.navigate("SetHomeLocation");
+        }
+      }
+      return navigation.navigate("UserCodeScreen");
+      }
+    } catch (error) {
+      console.log("Error : ",error?.message || error);
+    }
+    
+  };
+
+  const handleUpload = async position => {
+    try {
+      const image = await ImagePicker.openCamera({
+        width: 200,  
+        height: 200,
+        includeBase64: true,
+        cropping: true,
+        compressImageQuality: 0.5,
+      });
+      if (position === 'first') {
+        setImage1(image);
+      }
+      if (position === 'second') {
+        setImage2(image);
+      }
+    } catch (error) {
+      console.log('error : ', error);
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backContainer}>
           <Icon name="arrow-back" size={30} color="#000" />
         </TouchableOpacity>
         <View style={styles.headerContainer}>
@@ -35,8 +93,19 @@ const SetSpeedDial = ({ navigation }) => {
         </View>
 
         <View style={styles.imageContainer}>
-          <TouchableOpacity style={styles.circlePlusContainer}>
-            <Icon name="add" size={50} color="#888" />
+          <TouchableOpacity
+            onPress={() => handleUpload('first')}
+            style={styles.circlePlusContainer}>
+            {!image1 ? (
+              <Icon name="add" size={50} color="#888" />
+            ) : (
+              <>
+              <Image source={{uri: image1.path}} style={styles.uploadedImage} />
+              <View style={{position:"absolute",top:0,right:0,backgroundColor:"#252525",borderRadius:25,padding:5}} >
+                <Icon name="edit" size={20} color="#fff" />
+              </View>
+              </>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -47,9 +116,7 @@ const SetSpeedDial = ({ navigation }) => {
             placeholderTextColor="#888"
             placeholder="Contact 1 Name"
             value={contact1.name}
-            onChangeText={(text) =>
-              setContact1((prev) => ({ ...prev, name: text }))
-            }
+            onChangeText={text => setContact1(prev => ({...prev, name: text}))}
           />
         </View>
 
@@ -60,16 +127,25 @@ const SetSpeedDial = ({ navigation }) => {
             placeholder="Contact 1 Number"
             placeholderTextColor="#888"
             value={contact1.phNo}
-            keyboardType='numeric'
-            onChangeText={(text) =>
-              setContact1((prev) => ({ ...prev, phNo: text }))
-            }
+            keyboardType="numeric"
+            onChangeText={text => setContact1(prev => ({...prev, phNo: text}))}
           />
         </View>
 
         <View style={styles.imageContainer}>
-          <TouchableOpacity style={styles.circlePlusContainer}>
-            <Icon name="add" size={50} color="#888" />
+          <TouchableOpacity
+            onPress={() => handleUpload('second')}
+            style={styles.circlePlusContainer}>
+            {!image2 ? (
+              <Icon name="add" size={50} color="#888" />
+            ) : (
+              <>
+              <Image source={{uri: image2.path}} style={styles.uploadedImage} />
+              <View style={{position:"absolute",top:0,right:0,backgroundColor:"#252525",borderRadius:25,padding:5}} >
+                <Icon name="edit" size={20} color="#fff" />
+              </View>
+              </>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -80,9 +156,7 @@ const SetSpeedDial = ({ navigation }) => {
             placeholderTextColor="#888"
             placeholder="Contact 2 Name"
             value={contact2.name}
-            onChangeText={(text) =>
-              setContact2((prev) => ({ ...prev, name: text }))
-            }
+            onChangeText={text => setContact2(prev => ({...prev, name: text}))}
           />
         </View>
 
@@ -93,10 +167,8 @@ const SetSpeedDial = ({ navigation }) => {
             placeholder="Contact 2 Number"
             placeholderTextColor="#888"
             value={contact2.phNo}
-            keyboardType='numeric'
-            onChangeText={(text) =>
-              setContact2((prev) => ({ ...prev, phNo: text }))
-            }
+            keyboardType="numeric"
+            onChangeText={text => setContact2(prev => ({...prev, phNo: text}))}
           />
         </View>
 
@@ -115,9 +187,9 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'flex-start', 
+    justifyContent: 'flex-start',
     paddingHorizontal: '10%',
-    paddingVertical: '5%'
+    paddingVertical: '5%',
   },
   title: {
     fontSize: 32,
@@ -169,12 +241,17 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     alignItems: 'center',
     marginTop: 20,
-    marginBottom: 20
+    marginBottom: 20,
   },
   signInButtonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 19,
+  },
+  uploadedImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 50,
   },
 });
 

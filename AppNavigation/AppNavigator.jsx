@@ -14,6 +14,10 @@ import PatientSignUp from '../screens/auth/patient/PatientSignUp';
 import CaretakerLogin from '../screens/auth/caretaker/CaretakerLogin';
 import PatientLogin from '../screens/auth/patient/PatientLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SetMedicineTiming from '../screens/auth/common/SetMedicineTiming';
+import SetSpeedDial from '../screens/auth/caretaker/SetSpeedDial';
+import SetHomeLocation from '../screens/auth/caretaker/SetHomeLocation';
+import UserCodeScreen from '../screens/auth/caretaker/UserCodeScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -77,6 +81,10 @@ const AppNavigator = () => {
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="DiseaseSelectionScreen"  >
                     <Stack.Screen name="DiseaseSelectionScreen" component={DiseaseSelectionScreen}/>
+                    <Stack.Screen name="SetMedicineTiming" component={SetMedicineTiming}/>
+                    <Stack.Screen name="SetSpeedDial" component={SetSpeedDial}/>
+                    <Stack.Screen name="SetHomeLocation" component={SetHomeLocation}/>
+                    <Stack.Screen name="UserCodeScreen" component={UserCodeScreen}/>
         </Stack.Navigator>
         );
     }
@@ -89,10 +97,11 @@ const AppNavigator = () => {
         );
     }
 
-    if(user.role==="patient" && !user.caretakerId && !user.diseases?.length){
+    if(user.role==="patient" && !user.caretakerId && !done){
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="DiseaseSelectionScreen"  >
                     <Stack.Screen name="DiseaseSelectionScreen" component={DiseaseSelectionScreen}/>
+                    <Stack.Screen name="SetMedicineTiming" component={SetMedicineTiming}/>
         </Stack.Navigator>
         );
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,20 +8,24 @@ import {
   Alert,
   FlatList,
 } from 'react-native';
-import Mapbox, { MapView, Camera, PointAnnotation } from '@rnmapbox/maps';
+import Mapbox, {MapView, Camera, PointAnnotation} from '@rnmapbox/maps';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importing icons from react-native-vector-icons
 import debounce from 'lodash.debounce';
+import {BACKEND_URL} from '../../../constants/Ports';
+import {useLogin} from '../../../context/LoginProvider';
+import axios from 'axios';
 
 Mapbox.setAccessToken(
   'pk.eyJ1IjoiY29kZXNlZWtlcnMiLCJhIjoiY2x1ZmRidHkzMGtxMjJrcm84Nm93azFydyJ9.4PcFMmvYRH31QSZmtU1cXA',
 );
 
-const SetHomeLocation = ({ navigation }) => {
+const SetHomeLocation = ({navigation}) => {
   const [tempLocation, setTempLocation] = useState('');
   const [coordinates, setCoordinates] = useState([75, 15]);
   const [recommendations, setRecommendations] = useState([]);
+  const {user} = useLogin();
 
-  const fetchRecommendations = async (text) => {
+  const fetchRecommendations = async text => {
     const accessToken =
       'pk.eyJ1IjoiY29kZXNlZWtlcnMiLCJhIjoiY2x1ZmRidHkzMGtxMjJrcm84Nm93azFydyJ9.4PcFMmvYRH31QSZmtU1cXA';
     try {
@@ -33,7 +37,7 @@ const SetHomeLocation = ({ navigation }) => {
       const data = await response.json();
       if (data.features) {
         setRecommendations(
-          data.features.map((feature) => ({
+          data.features.map(feature => ({
             name: feature.place_name,
             coordinates: feature.center,
           })),
@@ -44,29 +48,46 @@ const SetHomeLocation = ({ navigation }) => {
     }
   };
 
-  const handleMapPress = (event) => {
+  const handleMapPress = event => {
     setCoordinates(event.geometry.coordinates);
   };
 
-  const debouncedFetchRecommendations = debounce(async (text) => {
+  const debouncedFetchRecommendations = debounce(async text => {
     await fetchRecommendations(text);
   }, 3000);
 
-  const handleSelectRecommendation = (item) => {
+  const handleSelectRecommendation = item => {
     setTempLocation(item.name);
     setCoordinates(item.coordinates);
     setRecommendations([]);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!coordinates) {
       Alert.alert('Error', 'Please select a valid location.');
       return;
     }
-    navigation.navigate('SetSpeedDial');
+    try {
+      const [lon, lat] = coordinates;
+      console.log(lat, lon);
+      const url = `${BACKEND_URL}/geolocation/set-location/${user?.patientId}`;
+      console.log(url);
+      const response = await axios.post(url,{lon,lat,type:"home"},{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      });
+      const res = await response.data;
+      if(res.success){
+        return navigation.navigate("UserCodeScreen");
+      }
+      
+    } catch (error) {
+      console.log("Error : ",error?.message || error);
+    }
   };
 
-  const handleInputChange = (text) => {
+  const handleInputChange = text => {
     setTempLocation(text);
     if (text.trim() !== '') {
       debouncedFetchRecommendations(text);
@@ -77,7 +98,9 @@ const SetHomeLocation = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backContainer}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backContainer}>
         <Icon name="arrow-back" size={30} color="#000" />
       </TouchableOpacity>
       <View style={styles.headerContainer}>
@@ -100,7 +123,7 @@ const SetHomeLocation = ({ navigation }) => {
           data={recommendations}
           keyExtractor={(item, index) => index.toString()}
           style={styles.recommendationList}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <TouchableOpacity
               style={styles.recommendationItem}
               onPress={() => handleSelectRecommendation(item)}>
