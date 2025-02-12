@@ -140,7 +140,6 @@ const MedicationReminder = () => {
                   />
                 </View>
               </View>
-
               <View style={[styles.checkboxGroup, { backgroundColor: '#e8e8e8', borderRadius: 10, padding: '3%' }]}>
                 <View style={styles.row}>
                   <View style={[styles.checkboxContainer, { flexDirection: 'row', alignItems: 'center' }]}>
