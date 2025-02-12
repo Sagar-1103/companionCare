@@ -5,18 +5,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
-// Mock data for steps (for demonstration)
-const mockStepsData = {
-  '2025-02-12': 8104,
-  '2025-02-11': 7500,
-  '2025-02-10': 6543,
-  '2025-02-09': 2222,
-  '2025-02-08': 7865,
-  '2025-02-07': 8886,
-  '2025-02-06': 7522,
-  '2025-02-05': 7321,
-  '2025-02-04': 6543,
-  '2025-02-03': 7111,
+const mockData = {
+  '2025-02-12': { steps: 8104, calories: 850, distance: 5, duration: 120 },
+  '2025-02-11': { steps: 7500, calories: 800, distance: 4.5, duration: 110 },
+  '2025-02-10': { steps: 6543, calories: 700, distance: 4, duration: 100 },
+  '2025-02-09': { steps: 2222, calories: 300, distance: 2, duration: 60 },
+  '2025-02-08': { steps: 7865, calories: 820, distance: 5.2, duration: 125 },
+  '2025-02-07': { steps: 8886, calories: 900, distance: 5.5, duration: 130 },
+  '2025-02-06': { steps: 7522, calories: 780, distance: 4.8, duration: 115 },
+  '2025-02-05': { steps: 7321, calories: 760, distance: 4.7, duration: 112 },
+  '2025-02-04': { steps: 6543, calories: 700, distance: 4, duration: 100 },
+  '2025-02-03': { steps: 7111, calories: 750, distance: 4.6, duration: 110 },
 };
 
 const WalkTrackerScreen = () => {
@@ -28,45 +27,49 @@ const WalkTrackerScreen = () => {
     return date;
   });
 
-  // Handle date selection
   const handleDateSelect = (date) => {
     setSelectedDate(date);
   };
 
-  // Format date to YYYY-MM-DD for mock data lookup
   const formatDate = (date) => {
     return date.toISOString().split('T')[0];
   };
-  const steps = 8788;
-  const goal = 10000;
-  const progress = (steps / goal) * 100; // Calculate percentage
 
-  // Data for the three smaller circles
+  const selectedDateData = mockData[formatDate(selectedDate)] || {
+    steps: 0,
+    calories: 0,
+    distance: 0,
+    duration: 0,
+  };
+
+  const { steps, calories, distance, duration } = selectedDateData;
+  const goal = 10000;
+  const progress = (steps / goal) * 100; 
+
   const smallCirclesData = [
     {
       id: 1,
-      tintColor: '#820eee', // Tomato color
-      icon: 'burn', // FontAwesome icon name
-      text: 'Calories',
-      iconSet: 'FontAwesome5', // Specify the icon set
+      tintColor: '#820eee', 
+      icon: 'burn',
+      text: `${calories}kcal`,
+      iconSet: 'FontAwesome5',
     },
     {
       id: 2,
-      tintColor: '#EF8347', // LimeGreen color
-      icon: 'location-sharp', // Ionicons icon name
-      text: 'Cycling',
-      iconSet: 'Ionicons', // Specify the icon set
+      tintColor: '#EF8347', 
+      icon: 'location-sharp', 
+      text: `${distance}km`, 
+      iconSet: 'Ionicons', 
     },
     {
       id: 3,
-      tintColor: '#1F9AFF', // DodgerBlue color
-      icon: 'timelapse', // MaterialIcons icon name
-      text: 'Steps',
-      iconSet: 'MaterialIcons', // Specify the icon set
+      tintColor: '#1F9AFF', 
+      icon: 'timelapse',
+      text: `${duration}min`, 
+      iconSet: 'MaterialIcons', 
     },
   ];
 
-  // Function to render the appropriate icon component
   const renderIcon = (iconSet, iconName, color, size) => {
     switch (iconSet) {
       case 'FontAwesome5':
@@ -82,7 +85,6 @@ const WalkTrackerScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Top Bar with Calendar Icon and Today's Date */}
       <View style={styles.topBar}>
         <TouchableOpacity style={{ marginLeft: '5%' }}>
           <MaterialIcons name="calendar-month" size={36} color="#000" />
@@ -93,7 +95,6 @@ const WalkTrackerScreen = () => {
         </View>
       </View>
 
-      {/* Horizontal Scrolling Date Picker */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -114,16 +115,15 @@ const WalkTrackerScreen = () => {
         })}
       </ScrollView>
 
-      {/* Pie Chart Section */}
       <View style={styles.piechartcontainer}>
         <AnimatedCircularProgress
           size={240}
           width={25}
           fill={progress}
           duration={2000}
-          tintColor="#141B54" // Dark Blue
-          backgroundColor="#E5E7EB" // Light Gray
-          rotation={360} // To match the style in the image
+          tintColor="#141B54" 
+          backgroundColor="#E5E7EB" 
+          rotation={360} 
           lineCap="round"
         >
           {() => (
@@ -135,12 +135,11 @@ const WalkTrackerScreen = () => {
         </AnimatedCircularProgress>
       </View>
 
-      {/* Three Smaller Circles */}
       <View style={styles.rowContainer}>
         {smallCirclesData.map((circle) => (
           <View key={circle.id} style={styles.smallCircleContainer}>
             <AnimatedCircularProgress
-              size={80} // Smaller size
+              size={80} 
               width={10}
               fill={progress}
               duration={2000}
@@ -156,7 +155,6 @@ const WalkTrackerScreen = () => {
                 </View>
               )}
             </AnimatedCircularProgress>
-            {/* Text below the circle */}
             <Text style={[styles.smallLabelText, { color: circle.tintColor }]}>
               {circle.text}
             </Text>
@@ -243,13 +241,13 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   rowContainer: {
-    flexDirection: 'row', // Align items in a row
+    flexDirection: 'row', 
     justifyContent: 'space-around',
     width: '100%',
     marginBottom: '32%',
   },
   smallCircleContainer: {
-    alignItems: 'center', // Center icon and text
+    alignItems: 'center', 
   },
   smallChart: {
     alignItems: 'center',
@@ -262,7 +260,7 @@ const styles = StyleSheet.create({
   smallLabelText: {
     fontSize: 14,
     fontWeight: 'bold',
-    marginTop: 8, // Space between circle and text
+    marginTop: 8, 
   },
 });
 
