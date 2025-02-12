@@ -18,6 +18,7 @@ import SetMedicineTiming from '../screens/auth/common/SetMedicineTiming';
 import SetSpeedDial from '../screens/auth/caretaker/SetSpeedDial';
 import SetHomeLocation from '../screens/auth/caretaker/SetHomeLocation';
 import UserCodeScreen from '../screens/auth/caretaker/UserCodeScreen';
+import CaretakerTabNavigator from './CaretakerNavigation';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,7 +93,7 @@ const AppNavigator = () => {
     if(user.role==="caretaker" && user.patientId){
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
-                    <Stack.Screen name="TabNavigation" component={TabNavigation}/>
+                    <Stack.Screen name="TabNavigation" component={CaretakerTabNavigator}/>
         </Stack.Navigator>
         );
     }

@@ -6,13 +6,14 @@ import Camera from '../components/Camera';
 import Maps from '../components/Maps';
 import Logo from "../assets/Logo.png";
 import MedicationDemo from "../testScreens/MedicationDemo";
+import FallDetectionDemo from '../testScreens/FallDetectionDemo';
 
 const Tab = createBottomTabNavigator();
 
 const tabData = [
     {
-        name: 'Medication',
-        component: MedicationDemo,
+        name: 'Fall',
+        component: FallDetectionDemo,
         icons: {
             inactive: Logo,
             active: Logo,
