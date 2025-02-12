@@ -73,7 +73,7 @@ const MedicationReminder = () => {
           >
             <View style={[styles.header, { backgroundColor: 'rgb(97, 142, 166)' }]}>
               <Image
-                source={require('../assets/medBg.png')}
+                source={require('../../assets/medBg.png')}
                 style={styles.headerImage}
                 resizeMode="contain" 
               />
@@ -346,8 +346,8 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   floatingButtonContainer: {
-    position: 'absolute',
-    bottom: '9%',
+    position: 'relative',
+    bottom: '2%',
     left: 0,
     right: 0,
     alignItems: 'center',
