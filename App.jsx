@@ -4,7 +4,6 @@ LogBox.ignoreLogs(['new NativeEventEmitter']);
 import {NavigationContainer} from '@react-navigation/native';
 import LoginProvider from './context/LoginProvider';
 import AppNavigator from './AppNavigation/AppNavigator';
-import SetHomeLocation from './screens/auth/caretaker/SetHomeLocation';
 import PushNotification from 'react-native-push-notification';
 
 

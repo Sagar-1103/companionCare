@@ -31,6 +31,7 @@ const MedicationReminder = () => {
   const [medicineType, setMedicineType] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [dosageUnit, setDosageUnit] = useState('');
+  const [medicineDescription, setMedicineDescription] = useState(''); // New state for description
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
@@ -53,6 +54,7 @@ const MedicationReminder = () => {
       medicineType,
       medicineName,
       dosageUnit,
+      medicineDescription, // Include description in the log
       fromDate,
       toDate,
       isBeforeMeal,
@@ -69,13 +71,13 @@ const MedicationReminder = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
           <ScrollView
-            contentContainerStyle={[styles.container, { paddingBottom: 150 }]} 
+            contentContainerStyle={[styles.container, { paddingBottom: 150, backgroundColor: 'white' }]}
           >
             <View style={[styles.header, { backgroundColor: 'rgb(97, 142, 166)' }]}>
               <Image
                 source={require('../../assets/medBg.png')}
                 style={styles.headerImage}
-                resizeMode="contain" 
+                resizeMode="contain"
               />
             </View>
 
@@ -104,42 +106,57 @@ const MedicationReminder = () => {
             </View>
 
             <View style={styles.form}>
-              <View style={[styles.inputGroup, { flexDirection: 'row', alignItems: 'center', backgroundColor: '#e8e8e8', borderRadius: 10, paddingHorizontal: '2%'}]}>
-                  <MaterialCommunityIcons name="medical-bag" size={35} color="#888" />
-                  <TextInput
-                      placeholder="Medicine Name"
-                      style={{ flex: 1, paddingVertical: 12, paddingLeft: 11, color: '#000' , fontSize: 19}}
-                      value={medicineName}
-                      onChangeText={setMedicineName}
-                      placeholderTextColor={'#888'}
-                  />
+              {/* Medicine Name Input */}
+              <View style={[styles.inputGroup, { flexDirection: 'row', alignItems: 'center', backgroundColor: '#e8e8e8', borderRadius: 10, paddingHorizontal: '2%' }]}>
+                <MaterialCommunityIcons name="medical-bag" size={28} color="#888" />
+                <TextInput
+                  placeholder="Medicine Name"
+                  style={{ flex: 1, paddingVertical: 10, paddingLeft: 11, color: '#000', fontSize: 16 }}
+                  value={medicineName}
+                  onChangeText={setMedicineName}
+                  placeholderTextColor={'#888'}
+                />
+              </View>
+
+              {/* Medicine Description Input */}
+              <View style={[styles.inputGroup, { flexDirection: 'row', alignItems: 'center', backgroundColor: '#e8e8e8', borderRadius: 10, paddingHorizontal: '2%' }]}>
+                <MaterialCommunityIcons name="file-document" size={28} color="#888" />
+                <TextInput
+                  placeholder="Medicine Description"
+                  style={{ flex: 1, paddingVertical: 10, paddingLeft: 11, color: '#000', fontSize: 16 }}
+                  value={medicineDescription}
+                  onChangeText={setMedicineDescription}
+                  placeholderTextColor={'#888'}
+                  multiline // Allow multiple lines for description
+                />
               </View>
 
               <View style={styles.row}>
                 <View style={[styles.dropdown, { flexDirection: 'row', alignItems: 'center', paddingLeft: '3%', backgroundColor: '#e8e8e8', borderRadius: 10 }]}>
-                  <FontAwesome5 name="notes-medical" size={32} color="#888" />
+                  <FontAwesome5 name="notes-medical" size={25} color="#888" />
                   <Picker
-                      selectedValue={medicineType}
-                      onValueChange={(itemValue) => setMedicineType(itemValue)}
-                      style={{ flex: 1, color: medicineType ? '#000' : '#888', paddingLeft:'6%' }}
+                    selectedValue={medicineType}
+                    onValueChange={(itemValue) => setMedicineType(itemValue)}
+                    style={{ flex: 1, color: medicineType ? '#000' : '#888', paddingLeft: '6%', paddingVertical: '-2%'}}
                   >
-                      <Picker.Item style={{ fontSize: 19 }} label="Type..." value="" enabled={true} />
-                      <Picker.Item style={{ fontSize: 19 }} label="Pills" value="Pills" />
-                      <Picker.Item style={{ fontSize: 19 }} label="Syrup" value="Syrup" />
-                      <Picker.Item style={{ fontSize: 19 }} label="Injection" value="Injection" />
+                    <Picker.Item style={{ fontSize: 16 }} label="Type..." value="" enabled={true} />
+                    <Picker.Item style={{ fontSize: 16 }} label="Pills" value="Pills" />
+                    <Picker.Item style={{ fontSize: 16 }} label="Syrup" value="Syrup" />
+                    <Picker.Item style={{ fontSize: 16 }} label="Injection" value="Injection" />
                   </Picker>
                 </View>
                 <View style={[styles.dropdownleft, { flexDirection: 'row', alignItems: 'center', paddingHorizontal: '4%', paddingVertical: '-1%', backgroundColor: '#e8e8e8', borderRadius: 10 }]}>
-                  <FontAwesome5 name="stethoscope" size={30} color="#888" />
+                  <FontAwesome5 name="stethoscope" size={25} color="#888" />
                   <TextInput
-                      placeholder="Dosage"
-                      style={{ flex: 1, backgroundColor: '#e8e8e8', color: '#000', fontSize: 19, paddingLeft: 13 }}
-                      value={dosageUnit}
-                      onChangeText={setDosageUnit}
-                      placeholderTextColor={'#888'}
+                    placeholder="Dosage"
+                    style={{ flex: 1, backgroundColor: '#e8e8e8', color: '#000', fontSize: 16, paddingLeft: 13 }}
+                    value={dosageUnit}
+                    onChangeText={setDosageUnit}
+                    placeholderTextColor={'#888'}
                   />
                 </View>
               </View>
+
               <View style={[styles.checkboxGroup, { backgroundColor: '#e8e8e8', borderRadius: 10, padding: '3%' }]}>
                 <View style={styles.row}>
                   <View style={[styles.checkboxContainer, { flexDirection: 'row', alignItems: 'center' }]}>
@@ -171,10 +188,10 @@ const MedicationReminder = () => {
 
               {(isBeforeMeal || isAfterMeal) && (
                 <View style={[styles.inputGroup, { flexDirection: 'row', alignItems: 'center', backgroundColor: '#e8e8e8', borderRadius: 10, paddingHorizontal: '2%' }]}>
-                  <Ionicons name="time" size={30} color="#888" />
+                  <Ionicons name="time" size={25} color="#888" />
                   <TextInput
                     placeholder="Time (in minutes)"
-                    style={{ flex: 1, paddingVertical: 12, paddingLeft: 11, color: '#000', fontSize: 19 }}
+                    style={{ flex: 1, paddingVertical: 10, paddingLeft: 11, color: '#000', fontSize: 16 }}
                     value={time}
                     onChangeText={setTime}
                     placeholderTextColor={'#888'}
@@ -188,8 +205,8 @@ const MedicationReminder = () => {
                   onPress={() => setIsFromDatePickerOpen(true)}
                   style={[styles.input, styles.dateInput, { backgroundColor: '#e8e8e8' }]}
                 >
-                  <Ionicons name="calendar" size={30} color="#888" paddingRight='9%'/>
-                  <Text style={{ color: fromDate ? '#000' : '#888', fontSize: 19 }}>
+                  <Ionicons name="calendar" size={25} color="#888" paddingRight='9%' />
+                  <Text style={{ color: fromDate ? '#000' : '#888', fontSize: 16 }}>
                     {fromDate ? formatDate(fromDate) : 'From'}
                   </Text>
                 </TouchableOpacity>
@@ -197,8 +214,8 @@ const MedicationReminder = () => {
                   onPress={() => setIsToDatePickerOpen(true)}
                   style={[styles.input, styles.dateInput, { backgroundColor: '#e8e8e8' }]}
                 >
-                  <Ionicons name="calendar" size={30} color="#888" paddingRight='9%'/>
-                  <Text style={{ color: toDate ? '#000' : '#888', fontSize: 19 }}>
+                  <Ionicons name="calendar" size={25} color="#888" paddingRight='9%' />
+                  <Text style={{ color: toDate ? '#000' : '#888', fontSize: 16 }}>
                     {toDate ? formatDate(toDate) : 'To'}
                   </Text>
                 </TouchableOpacity>
@@ -263,8 +280,8 @@ const styles = StyleSheet.create({
   mealSelection: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    marginTop: '6%',
-    marginBottom: '-6%',
+    marginTop: '3%',
+    marginBottom: '-8%',
   },
   mealButton: {
     alignItems: 'center',
@@ -282,7 +299,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '7%',
   },
   inputGroup: {
-    marginBottom: '4%',
+    marginBottom: '3%',
   },
   row: {
     flexDirection: 'row',
@@ -291,10 +308,10 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    paddingVertical: '4%',
+    paddingVertical: '2%',
     paddingHorizontal: '4%',
     borderRadius: 10,
-    fontSize: 14,
+    fontSize: 12,
   },
   dropdown: {
     flex: 1,
@@ -311,9 +328,9 @@ const styles = StyleSheet.create({
   },
   dateInput: {
     flex: 0.48,
-    flexDirection: 'row', 
-    alignItems: 'center',   
-    paddingVertical: '4%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: '3%',
     paddingHorizontal: '4%',
     borderRadius: 10,
     fontSize: 14,
@@ -326,9 +343,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: '-5%',
+    marginBottom: '-6%',
     marginLeft: '6%',
-    marginTop: '2%',
+    marginTop: '1%',
   },
   checkbox: {
     width: 20,
@@ -345,15 +362,15 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   floatingButtonContainer: {
-    position: 'relative',
-    bottom: '2%',
+    position: 'absolute',
+    bottom: '9%',
     left: 0,
     right: 0,
     alignItems: 'center',
   },
   reminderButton: {
     width: '90%',
-    paddingVertical: '4.5%',
+    paddingVertical: '3.8%',
     borderRadius: 45,
     alignSelf: 'center',
     alignItems: 'center',
