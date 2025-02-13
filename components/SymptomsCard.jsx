@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 
 const SymptomsCard = ({ title, description, createdAt }) => {
@@ -18,11 +18,11 @@ const SymptomsCard = ({ title, description, createdAt }) => {
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.loggerText}>{title}</Text>
-        <FontAwesome name="pencil" size={18} color="#000" />
+        <MaterialIcons name="edit" size={20} color="#000" style={{marginBottom:'6%'}}/>
       </View>
 
 
-      <Text style={styles.description} numberOfLines={3}>
+      <Text style={styles.description} numberOfLines={5}>
         {description}
       </Text>
 
@@ -41,9 +41,9 @@ SymptomsCard.defaultProps = {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#eee",
-    padding: '5%',
+    padding: '6%',
     borderRadius: 20,
-    
+    // marginBottom: '6%'
   },
   header: {
     flexDirection: "row",
