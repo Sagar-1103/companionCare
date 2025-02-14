@@ -16,13 +16,15 @@ const InsulinDosageScreen = () => {
   const [insulinType, setInsulinType] = useState('Insulin Type');
   const [insulinLevelCategory, setInsulinLevelCategory] = useState(null); // New state for category
   const [dosage, setDosage] = useState(null);
+  const [shouldNavigate, setShouldNavigate] = useState(false); // New state
 
-//   useEffect(() => {
-//     if (dosage !== null && insulinLevelCategory !== null && sugarLevel !== null) {
+  useEffect(() => {
+    if (shouldNavigate && dosage !== null && insulinLevelCategory !== null && sugarLevel !== null) {
+      navigation.navigate('InsulinDosageRecommendation', { dosage, insulinType, insulinLevelCategory, bodyWeight });
+      setShouldNavigate(false); // Reset for the next calculation
+    }
+  }, [shouldNavigate, dosage, insulinType, insulinLevelCategory, bodyWeight, navigation, sugarLevel]); // sugarLevel added to dependency array
 
-//         navigation.navigate('InsulinDosageRecommendation', { dosage, insulinType, insulinLevelCategory, bodyWeight }); 
-//     }
-//   }, [dosage, insulinType, insulinLevelCategory, bodyWeight, navigation]);
 
   const calculateDosage = () => {
     const weight = parseFloat(bodyWeight);
@@ -37,7 +39,7 @@ const InsulinDosageScreen = () => {
       const totalInsulin = weight * 0.55;
       const basalDose = 0.4 * totalInsulin;
       setDosage(basalDose.toFixed(1));
-      setInsulinLevelCategory(getInsulinLevelCategory(basalDose/weight)); // Set category
+      setInsulinLevelCategory(getInsulinLevelCategory(basalDose)); // Set category
     } else if (insulinType === 'Bolus') {
       const totalInsulin = weight * 0.55;
       const ISF = 1800 / totalInsulin;
@@ -48,13 +50,21 @@ const InsulinDosageScreen = () => {
       setInsulinLevelCategory(getInsulinLevelCategory(totalBolusDose)); // Set category
 
     }
-    navigation.navigate('InsulinDosageRecommendation', { dosage, insulinType, insulinLevelCategory, bodyWeight });
+    if (insulinType === 'Bolus' && isNaN(parseFloat(sugarLevel))) {
+      alert("Please enter a valid sugar level for Bolus insulin.");
+      return; // Stop calculation if sugar level is not valid for Bolus
+    }
+
+    if (dosage !== null && insulinLevelCategory !== null) { // Check if both are set
+      setShouldNavigate(true); // Trigger navigation only after successful calculation
+    }
+    // navigation.navigate('InsulinDosageRecommendation', { dosage, insulinType, insulinLevelCategory, bodyWeight });
   };
 
   const getInsulinLevelCategory = (dose) => {
     if (insulinType === 'Basal') {
-      if (dose < 0.2) return 'Small';
-      else if (dose >= 0.2 && dose < 0.4) return 'Medium';
+      if (dose < 14) return 'Small';
+      else if (dose >= 14 && dose < 20) return 'Medium';
       else return 'Large';
     } else if (insulinType === 'Bolus') {
       if (dose < 4) return 'Small';
