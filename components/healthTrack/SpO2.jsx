@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 
 const SpO2 = ({ value, unit }) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.categoryText}>SpO</Text>
         <Icon name="droplet" size={28} color="#000" />
@@ -14,7 +14,7 @@ const SpO2 = ({ value, unit }) => {
       <View style={styles.circleContainer}>
         <Text style={styles.valueText}>{value}%</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

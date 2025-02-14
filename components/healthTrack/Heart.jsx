@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Heart = ({ value, unit }) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.categoryText}>Heart</Text>
         <Icon name="heartbeat" size={36} color="#000" />
@@ -14,7 +14,7 @@ const Heart = ({ value, unit }) => {
         <Text style={styles.valueText}>{value}</Text>
         <Text style={styles.unitText}>{unit}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
