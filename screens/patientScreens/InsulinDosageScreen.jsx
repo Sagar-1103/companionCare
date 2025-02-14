@@ -6,44 +6,63 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 
-// Import the image from your assets
-import InsulinImage from '../../assets/insulinBG.png'; // Adjust the path as needed
+import InsulinImage from '../../assets/insulinBG.png';
 
 const InsulinDosageScreen = () => {
   const navigation = useNavigation();
   const [bodyWeight, setBodyWeight] = useState('');
+  const [sugarLevel, setSugarLevel] = useState('');
   const [carbIntake, setCarbIntake] = useState('');
   const [insulinType, setInsulinType] = useState('Insulin Type');
-  const [sugarLevel, setSugarLevel] = useState('');
+  const [insulinLevelCategory, setInsulinLevelCategory] = useState(null); // New state for category
   const [dosage, setDosage] = useState(null);
 
-  // Effect to trigger navigation after dosage is calculated
-  useEffect(() => {
-    if (dosage !== null ) {
-      navigation.navigate('InsulinDosageRecommendation', { dosage, insulinType, bodyWeight });
-    }
-  }, [dosage, insulinType, bodyWeight, navigation]);
+//   useEffect(() => {
+//     if (dosage !== null && insulinLevelCategory !== null && sugarLevel !== null) {
+
+//         navigation.navigate('InsulinDosageRecommendation', { dosage, insulinType, insulinLevelCategory, bodyWeight }); 
+//     }
+//   }, [dosage, insulinType, insulinLevelCategory, bodyWeight, navigation]);
 
   const calculateDosage = () => {
     const weight = parseFloat(bodyWeight);
-    const carbs = parseFloat(carbIntake);
     const sugar = parseFloat(sugarLevel);
-    const targetSugar = 120; // Target blood sugar level
-    const ISF = 50; // Insulin Sensitivity Factor
-    const ICR = 10; // Insulin-to-Carb Ratio
+
+    if (isNaN(weight) || (insulinType === 'Bolus' && isNaN(sugar))) {
+      alert("Please enter valid numeric values."); // Basic validation
+      return;
+    }
 
     if (insulinType === 'Basal') {
-      // Basal Insulin Calculation
-      const basalDose = weight * 0.2; // Starting with 0.2 units/kg
+      const totalInsulin = weight * 0.55;
+      const basalDose = 0.4 * totalInsulin;
       setDosage(basalDose.toFixed(1));
+      setInsulinLevelCategory(getInsulinLevelCategory(basalDose/weight)); // Set category
     } else if (insulinType === 'Bolus') {
-      // Bolus Insulin Calculation
-      const carbCoverage = carbs / ICR;
-      const correctionDose = (sugar - targetSugar) / ISF;
-      const totalBolusDose = carbCoverage + correctionDose;
+      const totalInsulin = weight * 0.55;
+      const ISF = 1800 / totalInsulin;
+      const bolusDosePerMeal = (0.6 * totalInsulin) / 3;
+      const correctionFactor = (sugar - 120) / ISF;
+      const totalBolusDose = bolusDosePerMeal + correctionFactor;
       setDosage(totalBolusDose.toFixed(1));
+      setInsulinLevelCategory(getInsulinLevelCategory(totalBolusDose)); // Set category
+
     }
+    navigation.navigate('InsulinDosageRecommendation', { dosage, insulinType, insulinLevelCategory, bodyWeight });
   };
+
+  const getInsulinLevelCategory = (dose) => {
+    if (insulinType === 'Basal') {
+      if (dose < 0.2) return 'Small';
+      else if (dose >= 0.2 && dose < 0.4) return 'Medium';
+      else return 'Large';
+    } else if (insulinType === 'Bolus') {
+      if (dose < 4) return 'Small';
+      else if (dose >= 4 && dose < 8) return 'Medium';
+      else return 'Large';
+    }
+    return 'Medium';
+  }
 
   return (
     <View style={styles.container}>

@@ -2,34 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-// Import the images for small, medium, and large dosage
-import SmallDosageImage from '../../assets/greenInsulin.png'; // Replace with your image path
-import MediumDosageImage from '../../assets/yellowInsulin.png'; // Replace with your image path
-import LargeDosageImage from '../../assets/redInsulin.png'; // Replace with your image path
+import SmallDosageImage from '../../assets/greenInsulin.png';
+import MediumDosageImage from '../../assets/yellowInsulin.png';
+import LargeDosageImage from '../../assets/redInsulin.png';
 
 const InsulinDosageRecommendation = ({ route, navigation }) => {
-  const { dosage, insulinType, bodyWeight } = route.params;
+  const { dosage, insulinType, insulinLevelCategory, bodyWeight } = route.params; // Get the category
 
-  // Function to determine the dosage category
-  const getDosageCategory = (dosage, insulinType, bodyWeight) => {
-    if (insulinType === 'Basal') {
-      if (dosage/bodyWeight < 0.2) return 'Small';
-      else if (dosage/bodyWeight >= 0.2 && dosage/bodyWeight < 0.4) return 'Medium';
-      else return 'Large';
-    } else if (insulinType === 'Bolus') {
-      if (dosage < 4) return 'Small';
-      else if (dosage >= 4 && dosage < 8) return 'Medium';
-      else return 'Large';
-    }
-    return 'Medium'; // Default to medium if type is unknown
-  };
-
-  // Get the dosage category
-  const dosageCategory = getDosageCategory(dosage, insulinType, bodyWeight);
-
-  // Select the image based on the dosage category
   let dosageImage;
-  switch (dosageCategory) {
+  switch (insulinLevelCategory) { // Use the category to select image
     case 'Small':
       dosageImage = SmallDosageImage;
       break;
@@ -40,7 +21,7 @@ const InsulinDosageRecommendation = ({ route, navigation }) => {
       dosageImage = LargeDosageImage;
       break;
     default:
-      dosageImage = MediumDosageImage; // Default to medium image
+      dosageImage = MediumDosageImage;
   }
 
   return (
