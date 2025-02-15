@@ -6,6 +6,7 @@ import Logo from '../assets/Logo.png';
 import MedicationReminder from '../screens/common/MedicationReminder';
 import HealthTrackerScreen from '../screens/common/HealthTrackerScreen';
 import {useLogin} from '../context/LoginProvider';
+import LocationScreen from '../screens/caretakerScreens/LocationScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +21,7 @@ const tabData = [
   },
   {
     name: 'Location',
-    component: Home,
+    component: LocationScreen,
     icons: {
       inactive: Logo,
       active: Logo,

@@ -1,1 +1,2 @@
-export const BACKEND_URL = `https://fluffy-oranges-dress.loca.lt`;
+export const BACKEND_URL = `https://sagar-shirgaonkar.xyz`;
+export const SOCKET_URL = `ws://sagar-shirgaonkar.xyz:8080`;

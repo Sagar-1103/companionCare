@@ -77,7 +77,7 @@ const MedicationReminder = () => {
           >
             <View style={[styles.header, { backgroundColor: 'rgb(97, 142, 166)' }]}>
               <Image
-                source={require('../assets/medBg.png')}
+                source={require('../../assets/medBg.png')}
                 style={styles.headerImage}
                 resizeMode="contain" 
               />
