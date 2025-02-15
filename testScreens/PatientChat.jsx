@@ -18,28 +18,20 @@ import axios from "axios";
 import ImagePicker from "react-native-image-crop-picker";
 import { Picker } from "@react-native-picker/picker";
 
-const ChatScreen = ({ route }) => {
+const PatientChat = ({ route }) => {
   const [ws, setWs] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const { user } = useLogin();
-
+  const {otherUserRole } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedRole, setSelectedRole] = useState(user.role); 
   const drops = [];
 
   const userId = user.id;
-  const roomId = selectedRole === "patient"? user.roomIds.caretakerId || user.roomIds.doctorId: selectedRole === "caretaker"? user.roomId: null;
-    if(selectedRole=="patient"){
-      if (user.roomIds.caretakerId) {
-        drops.push("Caretaker")
-      }
-      if (user.roomIds.doctorId) {
-        drops.push("Doctor")
-      }
-    }
+  const roomId = otherUserRole === "Caretaker"? user.roomIds?.caretakerRoomId : user.roomIds?.doctorRoomId;
   const handleUpload = async () => {
     try {
       ImagePicker.openPicker({
@@ -148,15 +140,6 @@ const ChatScreen = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headTitle}>Chat</Text>
-        {drops?.length!==0 && <Picker
-          selectedValue={selectedRole}
-          style={styles.picker}
-          onValueChange={(itemValue) => setSelectedRole(itemValue)}
-        >
-          {drops.map((drop,index)=>(
-          <Picker.Item key={index} label={drop} value="drop" />
-          ))}
-        </Picker>}
       </View>
 
       <FlatList
@@ -248,4 +231,4 @@ const styles = StyleSheet.create({
   sendButton: { backgroundColor: "green", padding: 10, borderRadius: 50 },
 });
 
-export default ChatScreen;
+export default PatientChat;

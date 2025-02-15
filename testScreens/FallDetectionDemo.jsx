@@ -7,6 +7,8 @@ import { accelerometer, gyroscope, setUpdateIntervalForType, SensorTypes } from 
 import { map, filter } from "rxjs/operators";
 import BackgroundService from 'react-native-background-actions';
 import PushNotification from 'react-native-push-notification';
+import Geolocation from "@react-native-community/geolocation";
+import { useLogin } from "../context/LoginProvider";
 
 const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 
@@ -15,6 +17,7 @@ const FallDetectionDemo = () => {
     const [gyroSubscription, setGyroSubscription] = useState(null);
     const [latestAcceleration, setLatestAcceleration] = useState({ x: 0, y: 0, z: 0 });
     const [latestGyroscope, setLatestGyroscope] = useState({ x: 0, y: 0, z: 0 });
+    const {user} = useLogin();
 
     const requestNotificationPermission = async () => {
       if (Platform.OS === 'android' && Platform.Version >= 33) {
@@ -31,7 +34,7 @@ const FallDetectionDemo = () => {
       requestNotificationPermission();
     }, []);
   
-  const startBackgroundService = async () => {
+  const startBackgroundService2 = async () => {
     const veryIntensiveTask = async (taskDataArguments) => {
       const { delay } = taskDataArguments;
       setUpdateIntervalForType(SensorTypes.accelerometer, 400); 
@@ -137,7 +140,7 @@ const FallDetectionDemo = () => {
     await BackgroundService.start(veryIntensiveTask, options);
   };
 
-  const stopBackgroundService = async () => {
+  const stopBackgroundService2 = async () => {
     await BackgroundService.stop();
     if (accelSubscription) {
       accelSubscription.unsubscribe();
@@ -149,12 +152,83 @@ const FallDetectionDemo = () => {
     }
   };
 
+  const getCurrentLocation = () => {
+    return new Promise((resolve, reject) => {
+        Geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+                resolve({ latitude, longitude });
+            },
+            error => {
+                reject(error.message);
+            }
+        );
+    });
+};
+
+const fetchSafeStatus = async()=>{
+  try {
+    const url = `${BACKEND_URL}/geolocation/safe-zone-status/${user.id}`;
+    const response = await axios.get(url);
+    const res = await response.data;
+    console.log(res.data.isInsideSafeZone);
+    
+  } catch (error) {
+    console.log("Error : ",error);
+    stopServices();
+  }
+}
+
+  const veryIntensiveTask1 = async (taskDataArguments) => {
+    const { delay } = taskDataArguments;
+    await new Promise( async (resolve) => {
+        for (let i = 0; BackgroundService.isRunning(); i++) {
+            console.log(i);
+            const location = await getCurrentLocation();
+            console.log(location);
+            const url = `${BACKEND_URL}/geolocation/set-location/${user.id}`;
+            const response = await axios.post(url,{lon:location.longitude,lat:location.latitude,type:"patient"},{
+              headers:{
+                "Content-Type":"application/json"
+              }
+            });
+            const res = await response.data;
+            console.log(res.message);
+            fetchSafeStatus();
+            await sleep(delay);
+        }
+    });
+};
+
+
+const options1 = {
+  taskName: 'Example',
+  taskTitle: 'ExampleTask title',
+  taskDesc: 'ExampleTask description',
+  taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+  },
+  color: '#ff00ff',
+  linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
+  parameters: {
+      delay: 15000,
+  },
+};
+
+const startBackgroundService1 = async()=>{
+  await BackgroundService.start(veryIntensiveTask1, options1);
+}
+const stopBackgroundService1 = async()=>{
+  await BackgroundService.stop(veryIntensiveTask1, options1);
+}
+
 
   return (
     <View style={styles.container}>
           <Text style={{color: 'white', fontSize: 30, fontWeight: 600}}>Home</Text>
           <TouchableOpacity
-            onPress={startBackgroundService}
+            onPress={startBackgroundService1}
             style={{
               backgroundColor: 'powderblue',
               paddingHorizontal: 30,
@@ -167,7 +241,7 @@ const FallDetectionDemo = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={stopBackgroundService}
+            onPress={stopBackgroundService1}
             style={{
               backgroundColor: 'powderblue',
               paddingHorizontal: 30,

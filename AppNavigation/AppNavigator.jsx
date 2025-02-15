@@ -19,6 +19,8 @@ import SetSpeedDial from '../screens/auth/caretaker/SetSpeedDial';
 import SetHomeLocation from '../screens/auth/caretaker/SetHomeLocation';
 import UserCodeScreen from '../screens/auth/caretaker/UserCodeScreen';
 import CaretakerTabNavigator from './CaretakerNavigation';
+import ChatScreen from '../testScreens/ChatScreen';
+import PatientChat from '../testScreens/PatientChat';
 
 const Stack = createNativeStackNavigator();
 
@@ -96,6 +98,7 @@ const AppNavigator = () => {
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
                     <Stack.Screen name="TabNavigation" component={CaretakerTabNavigator}/>
+                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
         </Stack.Navigator>
         );
     }
@@ -112,6 +115,7 @@ const AppNavigator = () => {
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="PatientTabNavigation"  >
                     <Stack.Screen name="PatientTabNavigation" component={PatientTabNavigation}/>
+                    <Stack.Screen name="PatientChat" component={PatientChat}/>
         </Stack.Navigator>
         );
     }
@@ -119,6 +123,7 @@ const AppNavigator = () => {
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="PatientTabNavigation"  >
                     <Stack.Screen name="PatientTabNavigation" component={PatientTabNavigation}/>
+                    <Stack.Screen name="PatientChat" component={PatientChat}/>
         </Stack.Navigator>
         );
     }
