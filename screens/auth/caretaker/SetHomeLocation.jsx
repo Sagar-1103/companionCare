@@ -78,6 +78,8 @@ const SetHomeLocation = ({navigation}) => {
         }
       });
       const res = await response.data;
+      console.log(res.data);
+      
       if(res.success){
         return navigation.navigate("UserCodeScreen");
       }

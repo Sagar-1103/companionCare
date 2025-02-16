@@ -5,6 +5,7 @@ import axios from 'axios';
 import {BACKEND_URL} from "../../constants/Ports";
 import {useLogin} from "../../context/LoginProvider";
 import BackgroundService from 'react-native-background-actions';
+import PushNotification from 'react-native-push-notification';
 
 Mapbox.setAccessToken(
   'pk.eyJ1IjoiY29kZXNlZWtlcnMiLCJhIjoiY2x1ZmRidHkzMGtxMjJrcm84Nm93azFydyJ9.4PcFMmvYRH31QSZmtU1cXA',
@@ -12,7 +13,7 @@ Mapbox.setAccessToken(
 
 const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
 
-const LocationScreen = () => {
+const LocationScreen = ({navigation}) => {
   const [homeCoordinates, setHomeCoordinates] = useState([0,0]);
   const [userCoordinates, setUserCoordinates] = useState([0,0]);
   const [showRadiusInput, setShowRadiusInput] = useState(false);
@@ -21,6 +22,8 @@ const LocationScreen = () => {
   const [radius, setRadius] = useState(1);
   const [showCenter,setShowCenter] = useState(null);
   const [services,setServices] = useState(true);
+  const [patientLocated,setPatientLocated] = useState(false);
+  const [loading,setLoading] = useState(true);
 
   const [coordinates,setCoordinates] = useState([]);
   const {user} = useLogin();
@@ -30,7 +33,7 @@ const LocationScreen = () => {
     await new Promise( async (resolve) => {
         for (let i = 0; BackgroundService.isRunning(); i++) {
               fetchCoordinates();
-              fetchSafeStatus();
+              // fetchSafeStatus();
               console.log(i);
               await sleep(delay);
         }
@@ -39,8 +42,8 @@ const LocationScreen = () => {
 
 const options = {
   taskName: 'Geolocation',
-  taskTitle: 'geolocation tracking',
-  taskDesc: 'geolocation tracking',
+  taskTitle: 'Geolocation tracking',
+  taskDesc: 'Geolocation tracking',
   taskIcon: {
       name: 'ic_launcher',
       type: 'mipmap',
@@ -50,6 +53,22 @@ const options = {
   parameters: {
       delay: 30000,
   },
+};
+
+const showLocNotification = () => {
+  PushNotification.localNotification({
+    channelId: "Location-alert", 
+    title: `Out of safe zone`,
+    message: `Patient if outside the safe zone.`,  
+    bigText: "Tap this notification to open the map screen.",  
+    importance: "high",  
+    playSound: true,  
+    soundName: "default",  
+    actions: ["Confirm"],  
+    invokeApp: true,  
+    // userInfo: { screen: "LocationScreen" }, 
+    // onPress:navigation.navigate("LocationScreen")
+  });
 };
 
 const handleCenterSubmit = async()=>{
@@ -62,11 +81,11 @@ const handleCenterSubmit = async()=>{
     });
     const res = await response.data;
     if(res.success){
-      if(res.data.geo.homeLocation.coordinates && res.data.geo.patientLocation.coordinates && res.data.geo.radius){
-        setHomeCoordinates(res.data.geo.homeLocation.coordinates);
-        setUserCoordinates(res.data.geo.patientLocation.coordinates);
+      if(res.data.geo.homeLocation?.coordinates && res.data.geo.patientLocation?.coordinates && res.data.geo.radius){
+        setHomeCoordinates(res.data.geo.homeLocation?.coordinates);
+        setUserCoordinates(res.data.geo.patientLocation?.coordinates);
         setRadius(res.data.geo.radius);
-        console.log(res.data.geo.homeLocation.coordinates,res.data.geo.patientLocation.coordinates,res.data.geo.radius);
+        console.log(res.data.geo.homeLocation.coordinates,res.data.geo?.patientLocation?.coordinates,res.data.geo.radius);
       }
       else {
         stopServices();
@@ -113,20 +132,53 @@ const handleRadiusSubmit = async()=>{
       const response = await axios.get(url);
       const res = await response.data;
       if(res.success){
-        if(res.data.geo.homeLocation.coordinates && res.data.geo.patientLocation.coordinates && res.data.geo.radius){
+        if(res.data.geo.homeLocation.coordinates &&  res.data.geo.radius){
           setHomeCoordinates(res.data.geo.homeLocation.coordinates);
-          setUserCoordinates(res.data.geo.patientLocation.coordinates);
+          setUserCoordinates(res.data.geo.patientLocation?.coordinates || [0,0]);
           setRadius(res.data.geo.radius);
-          console.log(res.data.geo.homeLocation.coordinates,res.data.geo.patientLocation.coordinates,res.data.geo.radius);
-        }
-        else {
-          stopServices();
+          console.log(res.data.geo.homeLocation.coordinates,res.data.geo.patientLocation?.coordinates,res.data.geo.radius);
+          if(res.data.geo.patientLocation?.coordinates){
+            setPatientLocated(true);
+            console.log("Fall Detection Status : ",res.data.geo.fallDetectionStatus);
+            if(res.data.geo.fallDetectionStatus===true){
+              showFallNotification();
+              const url = `${BACKEND_URL}/geolocation/set-fall-status/${user?.patientId}`;
+              const response1 = await axios.post(url,{fallDetectionStatus:false},{
+                headers:{
+                  "Content-Type":"application/json"
+                }
+                 })
+                const res1 = await response1.data;
+                if(res1.success){
+                  console.log("Inverted");
+                }
+            }
+            fetchSafeStatus();
+          } else {
+            setPatientLocated(false)
+          }
         }
       }
     } catch (error) {
       console.log("Error : ",error);
     }
   }
+
+  const showFallNotification = () => {
+    PushNotification.localNotification({
+      channelId: "Fall-alert", 
+      title: `Patient has fallen.`,
+      message: `Humpty Dumty had a great fall.`,  
+      bigText: "Tap this notification to open the map screen.",  
+      importance: "high",  
+      playSound: true,  
+      soundName: "default",  
+      actions: ["Confirm"],  
+      invokeApp: true,  
+      // userInfo: { screen: "LocationScreen" }, 
+      // onPress:navigation.navigate("LocationScreen")
+    });
+  };
 
   const fetchSafeStatus = async()=>{
     try {
@@ -137,6 +189,7 @@ const handleRadiusSubmit = async()=>{
         console.log(res.data.isInsideSafeZone);
         if (!res.data.isInsideSafeZone) {
           setSafeStatus(false)
+          showLocNotification();
           // stopServices();
         }
         else {
@@ -146,6 +199,9 @@ const handleRadiusSubmit = async()=>{
     } catch (error) {
       console.log("Error : ",error);
       stopServices();
+    }
+    finally {
+      setLoading(false);
     }
   }
 
@@ -207,6 +263,27 @@ const handleRadiusSubmit = async()=>{
   const handleSetCenter = () => {
     setShowCenter(true);
   };
+
+  if(loading){
+    return (
+      <View style={styles.containerr}>
+        <View style={styles.card}>
+          <Text style={styles.title}>Loading</Text>
+          <Text style={styles.message}>Loading..</Text>
+        </View>
+      </View>
+    );
+  }
+  if(!patientLocated){
+    return (
+      <View style={styles.containerr}>
+        <View style={styles.card}>
+          <Text style={styles.title}>Patient Not Logged In</Text>
+          <Text style={styles.message}>Please ensure the patient is logged in to continue monitoring.</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -331,6 +408,34 @@ const styles = StyleSheet.create({
   radiusInput: {
     fontSize: 16,
     color: '#000',
+  },
+  containerr: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa',
+  },
+  card: {
+    backgroundColor: '#ff4d4f', 
+    padding: 20,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 5,
+  },
+  message: {
+    fontSize: 14,
+    color: '#fff',
+    textAlign: 'center',
   },
 });
 

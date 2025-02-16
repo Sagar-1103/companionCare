@@ -3,10 +3,14 @@ import { View, Text, StyleSheet, Animated, Easing, Dimensions, PanResponder, Ale
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import MaterialIcon from 'react-native-vector-icons/Entypo';
 import LinearGradient from 'react-native-linear-gradient'; // For gradient background
+import { useLogin } from '../../context/LoginProvider';
+import { BACKEND_URL } from '../../constants/Ports';
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
-const FallDetectionPage = () => {
+const FallDetectionPage = ({navigation}) => {
+  const {user} = useLogin();
   // Animation for the "Fall Detected" text
   const textScale = useRef(new Animated.Value(1)).current;
 
@@ -109,8 +113,7 @@ const FallDetectionPage = () => {
           duration: 300,
           useNativeDriver: true,
         }).start(() => {
-          setIsCancelled(true);
-          Alert.alert('Fall detection cancelled!');
+          handleCancel();
         });
       } else {
         Animated.spring(buttonTranslateX, {
@@ -120,6 +123,25 @@ const FallDetectionPage = () => {
       }
     },
   });
+
+  const handleCancel = async()=>{
+    try {
+      const url = `${BACKEND_URL}/geolocation/set-fall-status/${user?.id}`;
+      const response = await axios.post(url,{fallDetectionStatus:false},{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      })
+      const res = await response.data;
+      if(res.success){
+        navigation.navigate("PatientTabNavigation");
+      }
+      setIsCancelled(true);
+      Alert.alert('Fall detection cancelled!');
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
 
   return (
     <LinearGradient

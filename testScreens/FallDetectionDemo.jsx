@@ -12,7 +12,7 @@ import { useLogin } from "../context/LoginProvider";
 
 const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 
-const FallDetectionDemo = () => {
+const FallDetectionDemo = ({navigation}) => {
     const [accelSubscription, setAccelSubscription] = useState(null);
     const [gyroSubscription, setGyroSubscription] = useState(null);
     const [latestAcceleration, setLatestAcceleration] = useState({ x: 0, y: 0, z: 0 });
@@ -32,7 +32,12 @@ const FallDetectionDemo = () => {
 
     useEffect(() => {
       requestNotificationPermission();
+      startServices();
     }, []);
+
+  const startServices = async()=>{
+    await Promise.all([startBackgroundService1(),startBackgroundService2()]);
+  }
   
   const startBackgroundService2 = async () => {
     const veryIntensiveTask = async (taskDataArguments) => {
@@ -92,52 +97,55 @@ const FallDetectionDemo = () => {
         }
       };
     };
-
-    const showNotification = () => {
-        PushNotification.localNotification({
-          channelId: "Patient-alert",
-          title: `: Accidental Fall`,
-          message: 'If your phone has accidently fallen then click the notification',
-        });
-      };
-
-    const detectFall = (acceleration, gyroscope) => {
-      const accelerationMagnitude = Math.sqrt(
-        acceleration.x ** 2 + acceleration.y ** 2 + acceleration.z ** 2
-      );
-      const accelerationThreshold = 30; 
-      const gyroThreshold = 20;
-      if (accelerationMagnitude > accelerationThreshold) {
-        const gyroMagnitude = Math.sqrt(
-          gyroscope.x ** 2 + gyroscope.y ** 2 + gyroscope.z ** 2
-        );
-    
-        if (gyroMagnitude < gyroThreshold) {
-          return true;
-        }
-      }
-    
-      return false;
-    };
-
-    const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
-
-    const options = {
-      taskName: 'Fall Detection',
-      taskTitle: 'Fall Detection',
-      taskDesc: 'Fall Detection Running',
-      taskIcon: {
-        name: 'ic_launcher',
-        type: 'mipmap',
-      },
-      color: '#ff00ff',
-      linkingURI: 'yourSchemeHere://chat/jane',
-      parameters: {
-        delay: 1000,
-      },
-    };
-
     await BackgroundService.start(veryIntensiveTask, options);
+  };
+  const showNotification = () => {
+    PushNotification.localNotification({
+      channelId: "Patient-alert",
+      title: `${user.name}: Accidental Fall`,
+      message: 'If your phone has accidentally fallen, tap to confirm your safety.',
+      bigText: "Tap this notification to open the safety confirmation screen.",
+      importance: "high",
+      playSound: true,
+      soundName: "default",
+      actions: ["Confirm"],
+      invokeApp: true,
+      userInfo: { screen: "FallDetectionPage" }, 
+      onPress:navigation.navigate("FallDetectionPage")
+    });
+  };
+  const detectFall = (acceleration, gyroscope) => {
+    const accelerationMagnitude = Math.sqrt(
+      acceleration.x ** 2 + acceleration.y ** 2 + acceleration.z ** 2
+    );
+    const accelerationThreshold = 30; 
+    const gyroThreshold = 20;
+    if (accelerationMagnitude > accelerationThreshold) {
+      const gyroMagnitude = Math.sqrt(
+        gyroscope.x ** 2 + gyroscope.y ** 2 + gyroscope.z ** 2
+      );
+  
+      if (gyroMagnitude < gyroThreshold) {
+        return true;
+      }
+    }
+  
+    return false;
+  };
+
+  const options = {
+    taskName: 'Fall Detection',
+    taskTitle: 'Fall Detection',
+    taskDesc: 'Fall Detection Running',
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+    color: '#ff00ff',
+    linkingURI: 'yourSchemeHere://chat/jane',
+    parameters: {
+      delay: 1000,
+    },
   };
 
   const stopBackgroundService2 = async () => {
@@ -172,7 +180,9 @@ const fetchSafeStatus = async()=>{
     const response = await axios.get(url);
     const res = await response.data;
     console.log(res.data.isInsideSafeZone);
-    
+    if(!res.data.isInsideSafeZone){
+      showLocNotification();
+    }
   } catch (error) {
     console.log("Error : ",error);
     stopServices();
@@ -212,9 +222,24 @@ const options1 = {
   color: '#ff00ff',
   linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
   parameters: {
-      delay: 15000,
+      delay: 30000,
   },
 };
+
+const showLocNotification = () => {
+  PushNotification.localNotification({
+    channelId: "Location-alert", 
+    title: `Out of bound`,
+    message: `${user.name} you are out of the bound.`,  
+    bigText: "Tap this notification to open the safety confirmation screen.",  
+    importance: "high",  
+    playSound: true,  
+    soundName: "default",  
+    actions: ["Confirm"],  
+    invokeApp: true,  
+  });
+};
+
 
 const startBackgroundService1 = async()=>{
   await BackgroundService.start(veryIntensiveTask1, options1);
@@ -222,7 +247,6 @@ const startBackgroundService1 = async()=>{
 const stopBackgroundService1 = async()=>{
   await BackgroundService.stop(veryIntensiveTask1, options1);
 }
-
 
   return (
     <View style={styles.container}>

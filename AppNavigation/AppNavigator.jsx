@@ -21,6 +21,8 @@ import UserCodeScreen from '../screens/auth/caretaker/UserCodeScreen';
 import CaretakerTabNavigator from './CaretakerNavigation';
 import ChatScreen from '../testScreens/ChatScreen';
 import PatientChat from '../testScreens/PatientChat';
+import { PermissionsAndroid, Platform } from 'react-native';
+import FallDetectionPage from '../screens/common/FallDetectionPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +33,7 @@ const AppNavigator = () => {
     useEffect(()=>{
         storageAccess();
         setTimeout(()=>{
+            requestNotificationPermission();
             setLoading(false);
         },2000);
     },[])
@@ -51,6 +54,17 @@ const AppNavigator = () => {
                 setDone(true);
             }
     }
+
+    const requestNotificationPermission = async () => {
+        if (Platform.OS === 'android' && Platform.Version >= 33) {
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+            console.log("Notification permission denied");
+        }
+        }
+    };
 
     if (loading) {
         return (
@@ -124,6 +138,7 @@ const AppNavigator = () => {
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="PatientTabNavigation"  >
                     <Stack.Screen name="PatientTabNavigation" component={PatientTabNavigation}/>
                     <Stack.Screen name="PatientChat" component={PatientChat}/>
+                    <Stack.Screen name="FallDetectionPage" component={FallDetectionPage}/>
         </Stack.Navigator>
         );
     }
