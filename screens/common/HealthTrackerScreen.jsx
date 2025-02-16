@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Modal, Button } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker'; // For date picker
-import Walk from './healthTrack/Walk';
-import Sleep from './healthTrack/Sleep';
-import Heart from './healthTrack/Heart';
-import SpO2 from './healthTrack/SpO2';
+import Walk from '../../components/healthTrack/Walk';
+import Sleep from '../../components/healthTrack/Sleep';
+import Heart from '../../components/healthTrack/Heart';
+import SpO2 from '../../components/healthTrack/SpO2';
 
 // Mock data for activity values (for demonstration)
 const mockData = {

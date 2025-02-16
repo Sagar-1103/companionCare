@@ -1,205 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
-import BackgroundService from 'react-native-background-actions';
-import NetInfo from '@react-native-community/netinfo';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useLogin } from '../context/LoginProvider';
 
-const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
-
-
-const Home = () => {
-  const [tempName,setTempName] = useState("");
-  const [tempEmail,setTempEmail] = useState("");
-  const [tempPassword,setTempPassword] = useState("");
-  const {setUser} = useLogin();
-
-    const postUser = async(user)=>{
-        try {
-            const response = await axios.post("",user,{
-                headers:{
-                    "Content-Type":"application/json"
-                }
-            })
-            const res = await response.data;
-            console.log(res);
-            await AsyncStorage.clear();
-            await stopBackgroundServices();
-        } catch (error) {
-            console.log("Error : ",error);
-        }
+const Home = ({ navigation }) => {
+  const [roleModalVisible, setRoleModalVisible] = useState(false);
+  const {user} = useLogin();
+  console.log(user);
+  
+  const handleRoleSelect = (role) => {
+    console.log("Selected Role:", role);
+    if(user.role==="caretaker"){
+    return navigation.navigate("ChatScreen")
     }
-
-    const handle = async()=>{
-        try {
-            await NetInfo.fetch().then(async(state) => {
-                if(!state.isConnected){
-                    const tempUser =  {
-                        name: tempName,
-                        email:tempEmail,
-                        password:tempPassword
-                    }
-                  await AsyncStorage.setItem('input',JSON.stringify(tempUser));
-                  await startBackgroundServices();
-                }
-                else {
-                  const tempUser =  {
-                    name: tempName,
-                    email:tempEmail,
-                    password:tempPassword
-                }
-                    postUser(tempUser);
-                }
-            })
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-
-  const veryIntensiveTask = async taskDataArguments => {
-    const {delay} = taskDataArguments;
-    await new Promise(async resolve => {
-      for (let i = 0; BackgroundService.isRunning(); i++) {
-        console.log(i);
-        await NetInfo.fetch().then(async(state) => {
-            if(state.isConnected){
-                const storedUser = await AsyncStorage.getItem('input');
-                if (storedUser) {
-                    const user = await JSON.parse(storedUser);
-                    await postUser(user);
-                }
-            }
-          });
-        await sleep(delay);
-      }
-    });
+    setRoleModalVisible(false);
+    return navigation.navigate("PatientChat",{otherUserRole:role})
   };
 
-  const options = {
-    taskName: 'Example',
-    taskTitle: 'ExampleTask title',
-    taskDesc: 'ExampleTask description',
-    taskIcon: {
-      name: 'ic_launcher',
-      type: 'mipmap',
-    },
-    color: '#ff00ff',
-    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-    parameters: {
-      delay: 1000,
-    },
-  };
-
-  const startBackgroundServices = async () => {
-    try {
-      await BackgroundService.start(veryIntensiveTask, options);
-    } catch (error) {
-      console.log('Error : ', error);
-    }
-  };
-  const stopBackgroundServices = async () => {
-    try {
-      await BackgroundService.stop();
-    } catch (error) {
-      console.log('Error : ', error);
-    }
-  };
-  const handleLogout = async()=>{
-    try {
-      await AsyncStorage.clear();
-      setUser(null);
-    } catch (error) {
-      console.log("Error : ",error);
-    }
-  }
   return (
     <View style={styles.container}>
-      <Text style={{color: 'white', fontSize: 30, fontWeight: 600}}>Home</Text>
       <TouchableOpacity
-        onPress={startBackgroundServices}
-        style={{
-          backgroundColor: 'powderblue',
-          paddingHorizontal: 30,
-          paddingVertical: 12,
-          borderRadius: 20,
-          marginVertical: 10,
-        }}>
-        <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
-          Start Services
-        </Text>
+        onLongPress={() => setRoleModalVisible(true)}
+        style={styles.chatButton}
+      >
+        <AntDesign name="wechat" size={24} color="black" />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={stopBackgroundServices}
-        style={{
-          backgroundColor: 'powderblue',
-          paddingHorizontal: 30,
-          paddingVertical: 12,
-          borderRadius: 20,
-          marginVertical: 10,
-        }}>
-        <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
-          Stop Services
-        </Text>
-      </TouchableOpacity>
-      <TextInput
-          onChangeText={setTempName}
-          value={tempName}
-          placeholder="Enter Name"
-        />
-        <TextInput
-          onChangeText={setTempEmail}
-          value={tempEmail}
-          placeholder="Enter Email"
-        />
-        <TextInput
-          onChangeText={setTempPassword}
-          value={tempPassword}
-          placeholder="Enter Password"
-        />
-      <TouchableOpacity
-        onPress={handle}
-        style={{
-          backgroundColor: 'powderblue',
-          paddingHorizontal: 30,
-          paddingVertical: 12,
-          borderRadius: 20,
-          marginVertical: 10,
-        }}>
-        <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
-          Post User
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={handleLogout}
-        style={{
-          backgroundColor: 'powderblue',
-          paddingHorizontal: 30,
-          paddingVertical: 12,
-          borderRadius: 20,
-          marginVertical: 10,
-        }}>
-        <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
-          Logout User
-        </Text>
-      </TouchableOpacity>
+
+      {/* Role Selection Modal */}
+      <Modal
+        transparent={true}
+        visible={roleModalVisible}
+        animationType="slide"
+        onRequestClose={() => setRoleModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Choose a Role</Text>
+            {user.roomIds.doctorRoomId && <TouchableOpacity style={styles.roleOption} onPress={() => handleRoleSelect('Doctor')}>
+              <Text style={styles.roleText}>Doctor</Text>
+            </TouchableOpacity>}
+            {user.roomIds.caretakerRoomId && <TouchableOpacity style={styles.roleOption} onPress={() => handleRoleSelect('Caretaker')}>
+              <Text style={styles.roleText}>Caretaker</Text>
+            </TouchableOpacity>}
+            <TouchableOpacity onPress={() => setRoleModalVisible(false)} style={styles.closeButton}>
+              <Text style={styles.closeText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
-  },
-  input: {
-    flex: 1,
-    fontSize: 18,
-    color:"black"
-  },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#2c3e50' },
+  chatButton: { backgroundColor: 'powderblue', padding: 12, borderRadius: 20, position: "absolute", right: 10, bottom: 20 },
+  
+  // Modal Styles
+  modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalContent: { backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%', alignItems: 'center' },
+  modalTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
+  roleOption: { padding: 12, marginVertical: 5, backgroundColor: '#ddd', borderRadius: 5, width: '100%', alignItems: 'center' },
+  roleText: { fontSize: 16, fontWeight: 'bold' },
+  closeButton: { marginTop: 10, padding: 12, backgroundColor: 'red', borderRadius: 5, width: '100%', alignItems: 'center' },
+  closeText: { color: 'white', fontWeight: 'bold' }
 });
 
 export default Home;
