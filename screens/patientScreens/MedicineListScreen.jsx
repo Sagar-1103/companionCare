@@ -70,7 +70,7 @@ const MedicineListScreen = ({ navigation }) => {
   return (
     <LinearGradient colors={['#E3ECFA', '#C5DFF8']} style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={require('../assets/medicineListImg.png')} style={styles.headerImage} />
+        <Image source={require('../../assets/medicineListImg.png')} style={styles.headerImage} />
       </View>
 
       <Text style={styles.title}>Your Medications</Text>

@@ -119,7 +119,7 @@ const SetHomeLocation = ({navigation}) => {
           onChangeText={handleInputChange}
         />
       </View>
-
+      <View style={{right:"15%"}} >
       {recommendations.length > 0 && (
         <FlatList
           data={recommendations}
@@ -134,6 +134,7 @@ const SetHomeLocation = ({navigation}) => {
           )}
         />
       )}
+      </View>
 
       <View style={styles.mapContainer}>
         <MapView onPress={handleMapPress} style={styles.mapBox}>

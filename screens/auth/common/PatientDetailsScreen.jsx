@@ -97,6 +97,7 @@ const PatientDetails = ({navigation}) => {
           placeholder="Enter Patient Email"
           placeholderTextColor="#B0B0B0"
           value={patientEmail}
+          autoCapitalize='none'
           onChangeText={setPatientEmail}
           keyboardType="email-address"
         />

@@ -19,7 +19,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-const MedicationReminder = () => {
+const MedicationReminder = ({navigation}) => {
   const meals = [
     { name: 'Breakfast', icon: 'free-breakfast', type: MaterialIcons },
     { name: 'Lunch', icon: 'dinner-dining', type: MaterialIcons },
@@ -47,6 +47,7 @@ const MedicationReminder = () => {
 
   const handleShowHistory = ()=>{
     console.log('Show History')
+    navigation.navigate("MedicineListScreen");
   }
 
   const formatDate = (date) => (date ? date.toLocaleDateString() : '');

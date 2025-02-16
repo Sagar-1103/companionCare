@@ -23,6 +23,7 @@ import ChatScreen from '../testScreens/ChatScreen';
 import PatientChat from '../testScreens/PatientChat';
 import { PermissionsAndroid, Platform } from 'react-native';
 import FallDetectionPage from '../screens/common/FallDetectionPage';
+import MedicineListScreen from '../screens/patientScreens/MedicineListScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -113,6 +114,7 @@ const AppNavigator = () => {
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
                     <Stack.Screen name="TabNavigation" component={CaretakerTabNavigator}/>
                     <Stack.Screen name="ChatScreen" component={ChatScreen}/>
+                    <Stack.Screen name="MedicineListScreen" component={MedicineListScreen}/>
         </Stack.Navigator>
         );
     }
