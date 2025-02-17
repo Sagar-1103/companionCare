@@ -1,10 +1,12 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 
 const MedicationReminderButton = () => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={()=>navigation.navigate("MedicationReminder")} style={styles.container}>
       {/* Icon */}
       <FontAwesome6 name="pills" size={30} color="#000" style={{left:'41%', top:'10%'}}/>
 

@@ -9,7 +9,7 @@ const DiabetesComponent = () => {
       <Text style={styles.text}>Diabetes{"\n"}Log</Text>
 
       <Image
-        source={require("../../assets/diabetes.png")}
+        source={require("../assets/diabetes.png")}
         style={styles.image}
       />
     </TouchableOpacity>

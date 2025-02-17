@@ -6,6 +6,7 @@ import Walk from '../../components/healthTrack/Walk';
 import Sleep from '../../components/healthTrack/Sleep';
 import Heart from '../../components/healthTrack/Heart';
 import SpO2 from '../../components/healthTrack/SpO2';
+import { useNavigation } from '@react-navigation/native';
 
 // Mock data for activity values (for demonstration)
 const mockData = {
@@ -23,7 +24,8 @@ const mockData = {
 };
 
 // Main Screen Component
-const HealthTrackerScreen = ({ navigation }) => {
+const HealthTrackerScreen = () => {
+  const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const today = new Date();
@@ -46,17 +48,20 @@ const HealthTrackerScreen = ({ navigation }) => {
   };
 
   const handleSleepPress = () => {
-    console.log('Sleep clicked:', selectedDateData.sleep);
+    console.log('Sleep clicked:');
+    navigation.navigate('SleepTrackerScreen');
     // Navigate to a detailed screen or show a modal
   };
 
   const handleHeartPress = () => {
     console.log('Heart clicked:', selectedDateData.heart);
+    navigation.navigate('HeartTrackerScreen');
     // Navigate to a detailed screen or show a modal
   };
 
   const handleSpO2Press = () => {
     console.log('SpO2 clicked:', selectedDateData.spo2);
+    navigation.navigate('SpO2TrackerScreen');
     // Navigate to a detailed screen or show a modal
   };
 

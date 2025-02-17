@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import SymptomsCard from '../../components/SymptomsCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useLogin } from '../../context/LoginProvider';
+import { useNavigation } from '@react-navigation/native';
 
-const LogScreen = ({ navigation }) => {
+const LogScreen = () => {
+  const navigation = useNavigation();
   const [logsData, setLogsData] = useState([
     {
       id: '1',
@@ -11,7 +14,6 @@ const LogScreen = ({ navigation }) => {
       description: 'Mild headache since morning, feels slightly better now.',
       createdAt: new Date('2024-02-12T08:30:00'),
     },
-    // Add more logs here...
   ]);
 
   const handleAddLog = (newLog) => {
@@ -23,6 +25,7 @@ const LogScreen = ({ navigation }) => {
       prevLogs.map((log) => (log.id === id ? { ...log, ...updatedLog } : log))
     );
   };
+  const {user} = useLogin();
 
   return (
     <View style={styles.container}>
@@ -38,8 +41,9 @@ const LogScreen = ({ navigation }) => {
             title={item.title}
             description={item.description}
             createdAt={item.createdAt}
+            role={user.role}
             onEdit={() =>
-              navigation.navigate('AddSymptomScreen', {
+              navigation.navigate('AddSymptonScreen', {
                 log: item,
                 onSave: (updatedLog) => handleEditLog(item.id, updatedLog),
               })
@@ -50,16 +54,16 @@ const LogScreen = ({ navigation }) => {
       />
 
       {/* Floating Add Button */}
-      <TouchableOpacity
+      {user?.role==="patient" && <TouchableOpacity
         style={styles.addButton}
         onPress={() =>
-          navigation.navigate('AddSymptomScreen', {
+          navigation.navigate('AddSymptonScreen', {
             onSave: handleAddLog,
           })
         }
       >
         <MaterialIcons name="add" size={30} color="#fff" />
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </View>
   );
 };

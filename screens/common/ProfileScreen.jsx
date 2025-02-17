@@ -3,15 +3,26 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from "react-native-vector-icons/Ionicons";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import {useLogin} from "../../context/LoginProvider";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = () => {
+  const {user,setUser} = useLogin();
+console.log(user);
+
+  const handleLogout = async()=>{
+    try {
+      await AsyncStorage.clear();
+      setUser(null);
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
+
   return (
     <View style={styles.container}>
       {/* Back Button and Title */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={32} color="#000" />
-        </TouchableOpacity>
         <Text style={styles.title}>Profile</Text>
       </View>
 
@@ -22,17 +33,17 @@ const ProfileScreen = ({ navigation }) => {
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Disease Selection")}>
+      {!user.caretakerId && <TouchableOpacity style={styles.button} onPress={() => console.log("Disease Selection")}>
         <Icon name="medkit" size={42} color="#000" />
         <Text style={styles.buttonText}>Disease Selection</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
-      </TouchableOpacity>
+      </TouchableOpacity>}
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Connect Doctor")}>
+      { user.role==="patient" && <TouchableOpacity style={styles.button} onPress={() => console.log("Connect Doctor")}>
         <Fontisto name="doctor" size={42} color="#000" />
         <Text style={styles.buttonText}>Connect Doctor</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
-      </TouchableOpacity>
+      </TouchableOpacity>}
 
       <TouchableOpacity style={styles.button} onPress={() => console.log("Pairing Code")}>
         <Icon name="qr-code" size={42} color="#000" />
@@ -41,7 +52,7 @@ const ProfileScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton} onPress={() => console.log("Logout")}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
     </View>
@@ -95,10 +106,10 @@ const styles = StyleSheet.create({
     color:'#000'
   },
   logoutButton: {
-    padding: 20,
+    padding: 15,
     backgroundColor: '#003366',
     borderRadius: 15,
-    marginTop: '25%',
+    marginTop: '15%',
     marginHorizontal: 30,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,10 +1,12 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import FontAwesome from 'react-native-vector-icons/FontAwesome6'
 
 const SymptomLoggerButton = () => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={()=>navigation.navigate("LogScreen")} style={styles.container}>
       {/* Icon */}
       <FontAwesome name="clipboard-list" size={28} color="#000" style={{left:'42%', top:'5%'}}/>
 
