@@ -22,8 +22,8 @@ const MedicationReminderButton = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '82%',
-    height: '24%',
+    width: '90%',
+    height: '26%',
     backgroundColor: "#eeeeee",
     borderRadius: 15,
     padding: '1%',

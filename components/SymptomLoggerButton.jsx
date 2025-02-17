@@ -13,7 +13,7 @@ const SymptomLoggerButton = () => {
 
       {/* Image */}
       <Image
-        source={require("../../assets/Illustration_2.png")} // Replace with actual image path
+        source={require("../assets/Illustration_2.png")} // Replace with actual image path
         style={styles.image}
       />
     </TouchableOpacity>
@@ -22,8 +22,8 @@ const SymptomLoggerButton = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '82%',
-    height: '24%',
+    width: '90%',
+    height: '26%',
     backgroundColor: "#eeeeee",
     borderRadius: 15,
     padding: '1%',
