@@ -5,10 +5,11 @@ import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import {useLogin} from "../../context/LoginProvider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const {user,setUser} = useLogin();
-console.log(user);
+  const navigation = useNavigation();
 
   const handleLogout = async()=>{
     try {
@@ -27,13 +28,13 @@ console.log(user);
       </View>
 
       {/* Touchable Buttons */}
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Personal Details")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ProfileDisplayScreen")}>
         <Icon name="person" size={42} color="#000" />
         <Text style={styles.buttonText}>Personal Details</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>
 
-      {!user.caretakerId && <TouchableOpacity style={styles.button} onPress={() => console.log("Disease Selection")}>
+      {!user.caretakerId && <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("Selection")}>
         <Icon name="medkit" size={42} color="#000" />
         <Text style={styles.buttonText}>Disease Selection</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />

@@ -36,6 +36,8 @@ import AddSymptonScreen from "../screens/patientScreens/AddSymptonScreen";
 import InsulinDosageScreen from '../screens/patientScreens/InsulinDosageScreen';
 import InsulinDosageRecommendation from "../screens/patientScreens/InsulinDosageRecommendation";
 import ChatContactsList from '../screens/common/ChatContactList';
+import ProfileDisplayScreen from '../screens/common/ProfileDisplayScreen';
+import Selection from '../screens/auth/common/Selection';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -135,6 +137,8 @@ const AppNavigator = () => {
                     <Stack.Screen name="SpO2TrackerScreen" component={SpO2TrackerScreen}/>
                     <Stack.Screen name="ChatContactsList" component={ChatContactsList}/>
                     <Stack.Screen name="ChatScreen" component={ChatScreen}/>
+                    <Stack.Screen name="ProfileDisplayScreen" component={ProfileDisplayScreen}/>
+                    <Stack.Screen name="Selection" component={Selection}/>
         </Stack.Navigator>
         );
     }
