@@ -1,9 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
 const DiabetesComponent = () => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={()=>navigation.navigate("InsulinDosageScreen")} style={styles.container}>
       <FontAwesome6 name="droplet" size={22} color="#000" style={{left:'39%', top:'8%'}}/>
 
       <Text style={styles.text}>Diabetes{"\n"}Log</Text>

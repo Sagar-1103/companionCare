@@ -26,11 +26,6 @@ const InsulinDosageRecommendation = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Back Button */}
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Icon name="arrow-back" size={32} color="black" />
-      </TouchableOpacity>
-
       {/* Header */}
       <Text style={styles.header}>Insulin Dosage</Text>
 

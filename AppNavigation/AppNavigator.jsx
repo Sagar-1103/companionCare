@@ -33,6 +33,8 @@ import SleepTrackerScreen from '../screens/common/SleepTrackerScreen';
 import HeartTrackerScreen from '../screens/common/HeartTrackerScreen';
 import SpO2TrackerScreen from '../screens/common/SpO2TrackerScreen';
 import AddSymptonScreen from "../screens/patientScreens/AddSymptonScreen";
+import InsulinDosageScreen from '../screens/patientScreens/InsulinDosageScreen';
+import InsulinDosageRecommendation from "../screens/patientScreens/InsulinDosageRecommendation";
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -167,6 +169,8 @@ const AppNavigator = () => {
                     <Stack.Screen name="HeartTrackerScreen" component={HeartTrackerScreen}/>
                     <Stack.Screen name="SpO2TrackerScreen" component={SpO2TrackerScreen}/>
                     <Stack.Screen name="AddSymptonScreen" component={AddSymptonScreen}/>
+                    <Stack.Screen name="InsulinDosageScreen" component={InsulinDosageScreen}/>
+                    <Stack.Screen name="InsulinDosageRecommendation" component={InsulinDosageRecommendation}/>
         </Stack.Navigator>
         );
     }
