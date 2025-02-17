@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ArrowLeft } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const CodeDisplayScreen = () => {
   const navigation = useNavigation();
@@ -14,7 +14,7 @@ const CodeDisplayScreen = () => {
           onPress={() => navigation.goBack()} 
           style={styles.backButton}
         >
-          <ArrowLeft size={28} color="#222" />
+          <Icon name="arrow-back" size={26} color="black" />
         </TouchableOpacity>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Doctor Code</Text>
