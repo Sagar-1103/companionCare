@@ -246,6 +246,7 @@ const styles = StyleSheet.create({
   input: { flex: 1, fontSize: 16, padding: 10, backgroundColor: "#F0F0F0", borderRadius: 25 },
   fileButton: { padding: 10, marginHorizontal: 5 },
   sendButton: { backgroundColor: "green", padding: 10, borderRadius: 50 },
+  
 });
 
 export default ChatScreen;

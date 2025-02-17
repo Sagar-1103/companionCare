@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import { BACKEND_URL } from '../../constants/Ports';
+import { useLogin } from '../../context/LoginProvider';
+import axios from 'axios';
 
 const medicinesData = [
   { id: '1', name: 'Paracetamol', description: '500mg, 1 tablet daily', time: 'Breakfast', type: 'pill' },
@@ -25,6 +28,9 @@ const medicinesData = [
 const MedicineListScreen = ({ navigation }) => {
   const [medicines, setMedicines] = useState(medicinesData);
   const [selectedTimes, setSelectedTimes] = useState([]);
+  const {user} = useLogin();
+  const [mapping,setMapping] = useState(null);
+  const meals = ['breakfast', 'lunch', 'snacks', 'dinner'];
 
   const filterMedicines = () => {
     return selectedTimes.length > 0 ? medicines.filter((med) => selectedTimes.includes(med.time)) : medicines;
@@ -42,27 +48,56 @@ const MedicineListScreen = ({ navigation }) => {
 
   const renderMedicineIcon = (type) => {
     switch (type) {
-      case 'pill': return <MaterialCommunityIcons name="pill" size={50} color="#fff" />;
-      case 'syrup': return <FontAwesome6 name="bottle-droplet" size={50} color="#fff" />;
-      case 'injection': return <FontAwesome5 name="syringe" size={50} color="#fff" />;
+      case 'Pills': return <MaterialCommunityIcons name="pill" size={50} color="#fff" />;
+      case 'Syrup': return <FontAwesome6 name="bottle-droplet" size={50} color="#fff" />;
+      case 'Injection': return <FontAwesome5 name="syringe" size={50} color="#fff" />;
       default: return <Icon name="medication-liquid" size={50} color="#fff" />;
     }
   };
 
+  useEffect(()=>{
+    getTimes();
+    getAllMeds();
+  },[])
+
+  const getTimes = async()=>{
+    try {
+      const id = user.role==="patient"?user.id:user.patientId;
+      const url = `${BACKEND_URL}/medications/get-time/${id}`;
+      const response = await axios.get(url);
+      const res = await response.data;
+      setMapping(res.data.time.timings);
+    } catch (error) {
+        console.log("Error : ",error);
+    }
+  }
+
+  const getAllMeds = async()=>{
+    try {
+      const id = user.role==="patient"?user.id:user.patientId;
+      const url = `${BACKEND_URL}/medications/get-medications/${id}`;
+      const response = await axios.get(url);
+      const res = await response.data;
+      setMedicines(res.data.medications);
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
+
   const renderItem = ({ item }) => (
     <View style={styles.medicineBox}>
-      <View style={styles.iconContainer}>{renderMedicineIcon(item.type)}</View>
+      <View style={styles.iconContainer}>{renderMedicineIcon(item.medicineType)}</View>
       <View style={styles.textContainer}>
-        <Text style={styles.medicineName}>{item.name}</Text>
-        <Text style={styles.medicineDescription}>{item.description}</Text>
+        <Text style={styles.medicineName}>{item.medicineName}</Text>
+        <Text style={styles.medicineDescription}>{item.medicineType==="Pills"?`${item.medicineDosage} mg, 1 tablet`:item.medicineType==="Syrup"?`${item.medicineDosage} ml`:`${item.medicineDosage} unit`} daily</Text>
       </View>
       <View style={styles.actionIcons}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditMedicineScreen', { medicine: item })}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('EditMedicineScreen', { medicine: item })}>
           <Icon name="edit" size={28} color="#007BFF" style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleDelete(item.id)}>
           <Icon name="delete" size={28} color="#007BFF" style={styles.icon} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -78,18 +113,18 @@ const MedicineListScreen = ({ navigation }) => {
 
       {/* Meal Time Icons */}
       <View style={styles.timeIconsContainer}>
-        {['Breakfast', 'Lunch', 'Snack', 'Dinner'].map((time) => (
+        {meals.map((time) => (
           <TouchableOpacity
             key={time}
             style={[styles.timeIcon, selectedTimes.includes(time) ? styles.selectedTimeIcon : null]}
             onPress={() => toggleTimeSelection(time)}
           >
             <Icon 
-              name={time === 'Breakfast' ? 'free-breakfast' : time === 'Lunch' ? 'lunch-dining' : time === 'Snack' ? 'fastfood' : 'dinner-dining'}
+              name={time === 'breakfast' ? 'free-breakfast' : time === 'lunch' ? 'lunch-dining' : time === 'snacks' ? 'fastfood' : 'dinner-dining'}
               size={40} 
               color={selectedTimes.includes(time) ? '#fff' : '#007BFF'}
             />
-            <Text style={[styles.timeText, selectedTimes.includes(time) ? styles.selectedText : null]}>{time}</Text>
+            <Text style={[styles.timeText, selectedTimes.includes(time) ? styles.selectedText : null]}>{time.slice(0,1).toUpperCase()+time.slice(1,)}</Text>
           </TouchableOpacity>
         ))}
       </View>
