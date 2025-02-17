@@ -214,11 +214,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#000',
-    marginTop: '4%',
+    marginTop: '0%',
     marginLeft: '5%',
   },
   gridContainer: {
-    marginBottom: '14%',
+    marginBottom: '-6%',
   },
   row: {
     flexDirection: 'row',
