@@ -9,16 +9,18 @@ import TwachAIButton from '../../components/TwachAIButton';
 import SymptomLoggerButton from '../../components/SymptomLoggerButton';
 import FallDetectionDemo from '../../testScreens/FallDetectionDemo';
 import { useLogin } from '../../context/LoginProvider';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
   const {user} = useLogin();
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       {/* Top Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Home</Text>
         {user.role==="patient" && user.caretakerId && <FallDetectionDemo/>}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate("ChatContactsList")} >
           <Icon name="wechat" size={40} color="#003366" />
         </TouchableOpacity>
       </View>

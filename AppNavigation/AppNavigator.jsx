@@ -19,7 +19,7 @@ import SetSpeedDial from '../screens/auth/caretaker/SetSpeedDial';
 import SetHomeLocation from '../screens/auth/caretaker/SetHomeLocation';
 import UserCodeScreen from '../screens/auth/caretaker/UserCodeScreen';
 import CaretakerTabNavigator from './CaretakerNavigation';
-import ChatScreen from '../testScreens/ChatScreen';
+import ChatScreen from '../screens/common/ChatScreen';
 import PatientChat from '../testScreens/PatientChat';
 import { PermissionsAndroid, Platform } from 'react-native';
 import FallDetectionPage from '../screens/common/FallDetectionPage';
@@ -35,6 +35,7 @@ import SpO2TrackerScreen from '../screens/common/SpO2TrackerScreen';
 import AddSymptonScreen from "../screens/patientScreens/AddSymptonScreen";
 import InsulinDosageScreen from '../screens/patientScreens/InsulinDosageScreen';
 import InsulinDosageRecommendation from "../screens/patientScreens/InsulinDosageRecommendation";
+import ChatContactsList from '../screens/common/ChatContactList';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -123,7 +124,6 @@ const AppNavigator = () => {
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
                     <Stack.Screen name="TabNavigation" component={CaretakerTabNavigator}/>
-                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
                     <Stack.Screen name="MedicineListScreen" component={MedicineListScreen}/>
                     <Stack.Screen name="TwatchAIScreen" component={TwatchAIScreen}/>
                     <Stack.Screen name="MedicationReminder" component={MedicationReminder}/>
@@ -133,6 +133,8 @@ const AppNavigator = () => {
                     <Stack.Screen name="SleepTrackerScreen" component={SleepTrackerScreen}/>
                     <Stack.Screen name="HeartTrackerScreen" component={HeartTrackerScreen}/>
                     <Stack.Screen name="SpO2TrackerScreen" component={SpO2TrackerScreen}/>
+                    <Stack.Screen name="ChatContactsList" component={ChatContactsList}/>
+                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
         </Stack.Navigator>
         );
     }
@@ -171,6 +173,8 @@ const AppNavigator = () => {
                     <Stack.Screen name="AddSymptonScreen" component={AddSymptonScreen}/>
                     <Stack.Screen name="InsulinDosageScreen" component={InsulinDosageScreen}/>
                     <Stack.Screen name="InsulinDosageRecommendation" component={InsulinDosageRecommendation}/>
+                    <Stack.Screen name="ChatContactsList" component={ChatContactsList}/>
+                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
         </Stack.Navigator>
         );
     }

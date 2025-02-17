@@ -1,20 +1,75 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { BACKEND_URL } from '../../constants/Ports';
+import { useLogin } from '../../context/LoginProvider';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChatContactsList = () => {
   const [searchText, setSearchText] = useState('');
-  const [contacts, setContacts] = useState([
-    { id: '1', name: 'John Doe', avatar: 'https://picsum.photos/800' },
-    { id: '2', name: 'Jane Smith', avatar: 'https://picsum.photos/800' },
-    // { id: '3', name: 'Alice Brown', avatar: 'https://picsum.photos/800' },
-    // { id: '4', name: 'Michael Johnson', avatar: 'https://picsum.photos/800' },
-    // { id: '5', name: 'Emma Wilson', avatar: 'https://picsum.photos/800' },
-    // { id: '6', name: 'David Miller', avatar: 'https://picsum.photos/800' },
-    // { id: '7', name: 'Sophia Davis', avatar: 'https://picsum.photos/800' },
-    // { id: '8', name: 'James Anderson', avatar: 'https://picsum.photos/800' },
-  ]);
+  const [contacts, setContacts] = useState([]);
+  const navigation = useNavigation();
+  const {user,setUser} = useLogin();
+
+  useEffect(()=>{
+    fetchSelf();
+    fetchUsers();
+  },[])
+
+  const fetchSelf = async()=>{
+    try {
+      if(user.role==="patient"){
+        const url =`${BACKEND_URL}/users/current-patient/${user.id}`;
+        const response = await axios.get(url);
+        const res = await response.data;
+        setUser(res.data.patient);
+        await AsyncStorage.setItem('user',JSON.stringify(res.data.patient));
+      }
+      if(user.role==="caretaker"){
+        const url =`${BACKEND_URL}/users/current-caretaker/${user.id}`;
+        const response = await axios.get(url);
+        const res = await response.data;
+        setUser(res.data.caretaker);
+        await AsyncStorage.setItem('user',JSON.stringify(res.data.caretaker));
+      }
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
+
+  const fetchUsers = async()=>{
+    try {
+      const cont = [];
+      if (user.role==="caretaker") {
+        const url = `${BACKEND_URL}/users/current-patient/${user.patientId}`;
+        const response = await axios.get(url);
+        const res = await response.data;
+        cont.push(res.data.patient);
+      }
+      if (user.role==="patient") {
+        if(user?.roomIds){
+          if(user.roomIds?.caretakerRoomId){
+            const url = `${BACKEND_URL}/users/current-caretaker/${user.caretakerId}`;
+            const response = await axios.get(url);
+            const res = await response.data;
+            cont.push(res.data.caretaker);
+          }
+          if(user.roomIds?.doctorRoomId){
+            const url = `${BACKEND_URL}/users/current-doctor/${user.doctorId}`;
+            const response = await axios.get(url);
+            const res = await response.data;
+            cont.push(res.data.doctor);
+          }
+        }
+      }
+      setContacts(cont);
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
 
   // Filter contacts based on searchText
   const filteredContacts = contacts.filter(contact =>
@@ -22,8 +77,8 @@ const ChatContactsList = () => {
   );
 
   const renderContact = ({ item }) => (
-    <TouchableOpacity style={styles.contactItem}>
-      <Image source={{ uri: item.avatar }} style={styles.avatar} />
+    <TouchableOpacity onPress={()=>navigation.navigate("ChatScreen",{role:item.role,name:item.name})} style={styles.contactItem}>
+      <Image source={{ uri: `https://picsum.photos/800` }} style={styles.avatar} />
       <Text style={styles.contactName}>{item.name}</Text>
     </TouchableOpacity>
   );
