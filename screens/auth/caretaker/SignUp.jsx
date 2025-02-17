@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import LottieView from 'lottie-react-native'; // Import LottieView
 import { BACKEND_URL } from '../../../constants/Ports';
 import axios from 'axios';
 import { useLogin } from '../../../context/LoginProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SignUp = ({navigation}) => {
+const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +20,8 @@ const SignUp = ({navigation}) => {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
   const [isPhoneNumberFocused, setIsPhoneNumberFocused] = useState(false);
-  const {setUser,setAccessToken,setRefreshToken} = useLogin();
+  const [isLoading, setIsLoading] = useState(false); // State for loader
+  const { setUser, setAccessToken, setRefreshToken } = useLogin();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -29,46 +31,67 @@ const SignUp = ({navigation}) => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSignup = async()=>{
+  const handleSignup = async () => {
     try {
-      if(!name || !email || !password || !phoneNumber){
-        Alert.alert("Missing fields","Fill all the fields");
+      if (!name || !email || !password || !phoneNumber) {
+        Alert.alert('Missing fields', 'Fill all the fields');
         return;
       }
-      if(password!==confirmPassword){
-        Alert.alert("Password Mismatch","Your passwords do not match");
-        setConfirmPassword("");
+      if (password !== confirmPassword) {
+        Alert.alert('Password Mismatch', 'Your passwords do not match');
+        setConfirmPassword('');
         return;
       }
+
+      setIsLoading(true); // Start loading
+
       const url = `${BACKEND_URL}/users/register-caretaker`;
-      const response = await axios.post(url,{name,email,password,phNo:phoneNumber,role:"caretaker"},{headers:{
-        "Content-Type":"application/json"
-      }})
+      const response = await axios.post(
+        url,
+        { name, email, password, phNo: phoneNumber, role: 'caretaker' },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
       const res = await response.data;
       if (res.success) {
-        const { accessToken, refreshToken,caretaker } = res.data;
+        const { accessToken, refreshToken, caretaker } = res.data;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
         setUser(caretaker);
-        await AsyncStorage.setItem('accessToken',accessToken);
-        await AsyncStorage.setItem('refreshToken',refreshToken);
-        await AsyncStorage.setItem('user',JSON.stringify(caretaker));
+        await AsyncStorage.setItem('accessToken', accessToken);
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+        await AsyncStorage.setItem('user', JSON.stringify(caretaker));
       }
 
-      setName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setPhoneNumber("");
+      setName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setPhoneNumber('');
     } catch (error) {
-      console.log("Error : ",error);
+      console.log('Error : ', error);
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false); // Stop loading
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
+      {/* Loader */}
+      {isLoading && (
+        <View style={styles.loaderContainer}>
+          <LottieView
+            source={require('../../../assets/appLoader.json')} // Path to your appLoader.json
+            autoPlay
+            loop
+            style={styles.loader}
+          />
+        </View>
+      )}
+
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="left" size={30} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Caretaker SignUp</Text>
@@ -86,7 +109,7 @@ const SignUp = ({navigation}) => {
           onBlur={() => setIsEmailFocused(false)}
         />
       </View>
-      
+
       <View style={styles.inputContainer}>
         <Ionicons name="mail-outline" size={24} color="#B0B0B0" style={styles.icon} />
         <TextInput
@@ -164,7 +187,7 @@ const SignUp = ({navigation}) => {
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("CaretakerLogin")}>
+        <TouchableOpacity onPress={() => navigation.navigate('CaretakerLogin')}>
           <Text style={styles.signInText}>Sign In</Text>
         </TouchableOpacity>
       </View>
@@ -239,6 +262,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#000080',
     fontWeight: 'bold',
+  },
+  loaderContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: '20%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent background
+    zIndex: 999, // Ensure it appears above other elements
+  },
+  loader: {
+    width: 200, // Adjust the size as needed
+    height: 200, // Adjust the size as needed
   },
 });
 
