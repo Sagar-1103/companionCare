@@ -10,16 +10,16 @@ import { useNavigation } from '@react-navigation/native';
 
 // Mock data for activity values (for demonstration)
 const mockData = {
-  '2025-02-12': { walk: { value: '8104', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '95', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
-  '2025-02-11': { walk: { value: '7500', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '90', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
-  '2025-02-10': { walk: { value: '6543', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '92', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
-  '2025-02-09': { walk: { value: '2222', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '94', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
-  '2025-02-08': { walk: { value: '7865', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '95', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
-  '2025-02-07': { walk: { value: '8886', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '96', unit: 'bpm' }, spo2: { value: '96', unit: '%' } },
-  '2025-02-06': { walk: { value: '7522', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '96', unit: 'bpm' }, spo2: { value: '96', unit: '%' } },
-  '2025-02-05': { walk: { value: '7321', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '98', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
-  '2025-02-04': { walk: { value: '6543', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '94', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
-  '2025-02-03': { walk: { value: '7111', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '91', unit: 'bpm' }, spo2: { value: '95', unit: '%' } },
+  '2025-02-19': { walk: { value: '8104', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '95', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
+  '2025-02-18': { walk: { value: '7500', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '90', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
+  '2025-02-17': { walk: { value: '6543', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '92', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
+  '2025-02-16': { walk: { value: '2222', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '94', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
+  '2025-02-15': { walk: { value: '7865', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '95', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
+  '2025-02-14': { walk: { value: '8886', unit: 'Steps' }, sleep: { value: '7', unit: 'Hrs' }, heart: { value: '96', unit: 'bpm' }, spo2: { value: '96', unit: '%' } },
+  '2025-02-13': { walk: { value: '7522', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '96', unit: 'bpm' }, spo2: { value: '96', unit: '%' } },
+  '2025-02-12': { walk: { value: '7321', unit: 'Steps' }, sleep: { value: '8', unit: 'Hrs' }, heart: { value: '98', unit: 'bpm' }, spo2: { value: '97', unit: '%' } },
+  '2025-02-11': { walk: { value: '6543', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '94', unit: 'bpm' }, spo2: { value: '98', unit: '%' } },
+  '2025-02-10': { walk: { value: '7111', unit: 'Steps' }, sleep: { value: '6', unit: 'Hrs' }, heart: { value: '95', unit: 'bpm' }, spo2: { value: '95', unit: '%' } },
   // Add more dates as needed
 };
 

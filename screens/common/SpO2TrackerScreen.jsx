@@ -5,19 +5,19 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const mockData = {
-  '2025-02-15': { spo2: 98, restingSpo2: 95, minSpo2: 90 },
-  '2025-02-14': { spo2: 97, restingSpo2: 96, minSpo2: 91 },
-  '2025-02-13': { spo2: 96, restingSpo2: 94, minSpo2: 89 },
-  '2025-02-12': { spo2: 99, restingSpo2: 95, minSpo2: 90 },
-  '2025-02-11': { spo2: 98, restingSpo2: 96, minSpo2: 92 },
-  '2025-02-10': { spo2: 97, restingSpo2: 94, minSpo2: 89 },
-  '2025-02-09': { spo2: 96, restingSpo2: 93, minSpo2: 88 },
-  '2025-02-08': { spo2: 98, restingSpo2: 95, minSpo2: 90 },
-  '2025-02-07': { spo2: 97, restingSpo2: 94, minSpo2: 89 },
-  '2025-02-06': { spo2: 99, restingSpo2: 96, minSpo2: 91 },
-  '2025-02-05': { spo2: 98, restingSpo2: 95, minSpo2: 90 },
-  '2025-02-04': { spo2: 97, restingSpo2: 94, minSpo2: 89 },
-  '2025-02-03': { spo2: 96, restingSpo2: 93, minSpo2: 88 },
+  '2025-02-19': { spo2: 98, restingSpo2: 95, minSpo2: 90 },
+  '2025-02-18': { spo2: 97, restingSpo2: 96, minSpo2: 91 },
+  '2025-02-17': { spo2: 96, restingSpo2: 94, minSpo2: 89 },
+  '2025-02-16': { spo2: 99, restingSpo2: 95, minSpo2: 90 },
+  '2025-02-15': { spo2: 98, restingSpo2: 96, minSpo2: 92 },
+  '2025-02-14': { spo2: 97, restingSpo2: 94, minSpo2: 89 },
+  '2025-02-13': { spo2: 96, restingSpo2: 93, minSpo2: 88 },
+  '2025-02-12': { spo2: 98, restingSpo2: 95, minSpo2: 90 },
+  '2025-02-11': { spo2: 97, restingSpo2: 94, minSpo2: 89 },
+  '2025-02-10': { spo2: 99, restingSpo2: 96, minSpo2: 91 },
+  '2025-02-09': { spo2: 98, restingSpo2: 95, minSpo2: 90 },
+  '2025-02-08': { spo2: 97, restingSpo2: 94, minSpo2: 89 },
+  '2025-02-07': { spo2: 96, restingSpo2: 93, minSpo2: 88 },
 };
 
 const spo2Facts = [

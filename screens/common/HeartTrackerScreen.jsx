@@ -5,19 +5,19 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const mockData = {
-  '2025-02-15': { bpm: 72, restingBpm: 60, maxBpm: 180 },
-  '2025-02-14': { bpm: 66, restingBpm: 60, maxBpm: 180 },
-  '2025-02-13': { bpm: 68, restingBpm: 60, maxBpm: 180 },
-  '2025-02-12': { bpm: 74, restingBpm: 60, maxBpm: 180 },
-  '2025-02-11': { bpm: 75, restingBpm: 62, maxBpm: 182 },
-  '2025-02-10': { bpm: 70, restingBpm: 58, maxBpm: 178 },
-  '2025-02-09': { bpm: 68, restingBpm: 59, maxBpm: 175 },
-  '2025-02-08': { bpm: 74, restingBpm: 61, maxBpm: 180 },
-  '2025-02-07': { bpm: 76, restingBpm: 63, maxBpm: 183 },
-  '2025-02-06': { bpm: 71, restingBpm: 60, maxBpm: 179 },
-  '2025-02-05': { bpm: 69, restingBpm: 59, maxBpm: 177 },
-  '2025-02-04': { bpm: 73, restingBpm: 61, maxBpm: 181 },
-  '2025-02-03': { bpm: 70, restingBpm: 60, maxBpm: 178 },
+  '2025-02-19': { bpm: 72, restingBpm: 60, maxBpm: 180 },
+  '2025-02-18': { bpm: 66, restingBpm: 60, maxBpm: 180 },
+  '2025-02-17': { bpm: 68, restingBpm: 60, maxBpm: 180 },
+  '2025-02-16': { bpm: 74, restingBpm: 60, maxBpm: 180 },
+  '2025-02-15': { bpm: 75, restingBpm: 62, maxBpm: 182 },
+  '2025-02-14': { bpm: 70, restingBpm: 58, maxBpm: 178 },
+  '2025-02-13': { bpm: 68, restingBpm: 59, maxBpm: 175 },
+  '2025-02-12': { bpm: 74, restingBpm: 61, maxBpm: 180 },
+  '2025-02-11': { bpm: 76, restingBpm: 63, maxBpm: 183 },
+  '2025-02-10': { bpm: 71, restingBpm: 60, maxBpm: 179 },
+  '2025-02-09': { bpm: 69, restingBpm: 59, maxBpm: 177 },
+  '2025-02-08': { bpm: 73, restingBpm: 61, maxBpm: 181 },
+  '2025-02-07': { bpm: 70, restingBpm: 60, maxBpm: 178 },
 };
 
 const heartFacts = [
