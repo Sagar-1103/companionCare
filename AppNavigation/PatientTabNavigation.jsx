@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Image } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Home from '../components/Home';
 import Logo from "../assets/Logo.png";
 import HealthTrackerScreen from '../screens/common/HealthTrackerScreen';
@@ -20,24 +20,24 @@ const tabData = [
         name: 'Home',
         component: HomeScreen,
         icons: {
-            inactive: Logo,
-            active: Logo,
+            inactive: 'home-outline',
+            active: 'home',
         },
     },
     {
         name: 'Health',
         component: HealthTrackerScreen,
         icons: {
-            inactive: Logo,
-            active: Logo,
+            inactive: 'heart-outline',
+            active: 'heart',
         },
     },
     {
         name: 'Profile',
         component: ProfileScreen,
         icons: {
-            inactive: Logo,
-            active: Logo,
+            inactive: 'person-outline',
+      active: 'person',
         },
     },
 ];
@@ -54,7 +54,7 @@ const PatientTabNavigation = () => {
                     borderTopLeftRadius: 10,
                     borderTopRightRadius: 10
                 },
-                tabBarActiveTintColor: '#f3765f', // Active icon color
+                tabBarActiveTintColor: '#2222aa', // Active icon color
                 tabBarInactiveTintColor: '#6c757d', // Inactive icon color
                 tabBarLabelStyle: {
                     fontSize: 10, // Smaller labels
@@ -75,14 +75,11 @@ const PatientTabNavigation = () => {
                     component={tab.component}
                     options={{
                         tabBarIcon: ({ focused }) => (
-                            <Image
-                                source={focused ? tab.icons.active : tab.icons.inactive}
-                                style={{
-                                    width: 24,
-                                    height: 24,
-                                    
-                                }}
-                            />
+                            <Ionicons
+                                                name={focused ? tab.icons.active : tab.icons.inactive}
+                                                size={24}
+                                                color={focused ? '#2222aa' : '#6c757d'}
+                                              />
                         ),
                     }}
                 />

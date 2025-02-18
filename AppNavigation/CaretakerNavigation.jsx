@@ -1,14 +1,11 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {Image} from 'react-native';
-import Home from '../components/Home';
-import Logo from '../assets/Logo.png';
-import MedicationReminder from '../screens/common/MedicationReminder';
-import HealthTrackerScreen from '../screens/common/HealthTrackerScreen';
 import {useLogin} from '../context/LoginProvider';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import LocationScreen from '../screens/caretakerScreens/LocationScreen';
 import HomeScreen from '../screens/common/HomeScreen';
 import ProfileScreen from '../screens/common/ProfileScreen';
+import HealthTrackerScreen from '../screens/common/HealthTrackerScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,39 +14,40 @@ const tabData = [
     name: 'Home',
     component: HomeScreen,
     icons: {
-      inactive: Logo,
-      active: Logo,
+      inactive: 'home-outline',
+      active: 'home',
     },
   },
   {
     name: 'Location',
     component: LocationScreen,
     icons: {
-      inactive: Logo,
-      active: Logo,
+      inactive: 'location-outline',
+      active: 'location',
     },
   },
   {
     name: 'Health',
     component: HealthTrackerScreen,
     icons: {
-      inactive: Logo,
-      active: Logo,
+      inactive: 'heart-outline',
+      active: 'heart',
     },
   },
   {
     name: 'Profile',
     component: ProfileScreen,
     icons: {
-      inactive: Logo,
-      active: Logo,
+      inactive: 'person-outline',
+      active: 'person',
     },
   },
 ];
 
 const CaretakerTabNavigator = () => {
   const {diseases} = useLogin();
-  const hasAlzheimer = diseases.some(disease => disease.diseaseName.toLowerCase().includes("alzheimer"));;
+  const hasAlzheimer = diseases.some(disease => disease.diseaseName.toLowerCase().includes("alzheimer"));
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -61,7 +59,7 @@ const CaretakerTabNavigator = () => {
           borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
         },
-        tabBarActiveTintColor: '#f3765f', // Active icon color
+        tabBarActiveTintColor: '#2222aa', // Active icon color
         tabBarInactiveTintColor: '#6c757d', // Inactive icon color
         tabBarLabelStyle: {
           fontSize: 10, // Smaller labels
@@ -76,7 +74,7 @@ const CaretakerTabNavigator = () => {
       }}>
       {tabData.map((tab, index) => {
         if (!hasAlzheimer && tab.name === 'Location') {
-          return;
+          return null;
         } else {
           return (
             <Tab.Screen
@@ -85,12 +83,10 @@ const CaretakerTabNavigator = () => {
               component={tab.component}
               options={{
                 tabBarIcon: ({focused}) => (
-                  <Image
-                    source={focused ? tab.icons.active : tab.icons.inactive}
-                    style={{
-                      width: 24,
-                      height: 24,
-                    }}
+                  <Ionicons
+                    name={focused ? tab.icons.active : tab.icons.inactive}
+                    size={24}
+                    color={focused ? '#2222aa' : '#6c757d'}
                   />
                 ),
               }}
