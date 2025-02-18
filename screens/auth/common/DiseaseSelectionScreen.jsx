@@ -30,7 +30,7 @@ const DiseaseSelectionScreen = ({navigation}) => {
 
   const [selectedDiseases, setSelectedDiseases] = useState([]);
   const handleDiseasePress = (disease) => {
-    const isSelected = selectedDiseases.some((item) => item.diseaseId === disease.diseaseId);
+    const isSelected = selectedDiseases?.some((item) => item.diseaseId === disease.diseaseId);
     
     if (isSelected) {
       setSelectedDiseases(selectedDiseases.filter((item) => item.diseaseId !== disease.diseaseId));

@@ -47,6 +47,7 @@ import FirstAid from '../components/FirstAidList';
 import FirstAidGuide from '../components/FirstAid/BasicSteps';
 import CommonProb from '../components/FirstAid/CommonProblems';
 import RareCase from '../components/FirstAid/RareCase';
+import AiChatScreen from '../screens/common/AIChatScreen';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -156,6 +157,8 @@ const AppNavigator = () => {
                     <Stack.Screen name="FirstAidGuide" component={FirstAidGuide}/>
                     <Stack.Screen name="CommonProb" component={CommonProb}/>
                     <Stack.Screen name="RareCase" component={RareCase}/>
+                    <Stack.Screen name="AiChatScreen" component={AiChatScreen}/>
+
 
         </Stack.Navigator>
         );
@@ -199,6 +202,8 @@ const AppNavigator = () => {
                     <Stack.Screen name="FirstAidGuide" component={FirstAidGuide}/>
                     <Stack.Screen name="CommonProb" component={CommonProb}/>
                     <Stack.Screen name="RareCase" component={RareCase}/>
+                    <Stack.Screen name="AiChatScreen" component={AiChatScreen}/>
+
 
         </Stack.Navigator>
         );
@@ -234,6 +239,7 @@ const AppNavigator = () => {
                     <Stack.Screen name="FirstAidGuide" component={FirstAidGuide}/>
                     <Stack.Screen name="CommonProb" component={CommonProb}/>
                     <Stack.Screen name="RareCase" component={RareCase}/>
+                    <Stack.Screen name="AiChatScreen" component={AiChatScreen}/>
 
         </Stack.Navigator>
         );

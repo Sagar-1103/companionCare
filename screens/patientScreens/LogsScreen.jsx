@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import SymptomsCard from '../../components/SymptomsCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useLogin } from '../../context/LoginProvider';
 import { useNavigation } from '@react-navigation/native';
+import { BACKEND_URL } from '../../constants/Ports';
+import axios from 'axios';
 
 const LogScreen = () => {
   const navigation = useNavigation();
@@ -16,15 +18,21 @@ const LogScreen = () => {
     },
   ]);
 
-  const handleAddLog = (newLog) => {
-    setLogsData([...logsData, newLog]);
-  };
+  useEffect(()=>{
+    getLogs();
+  },[])
 
-  const handleEditLog = (id, updatedLog) => {
-    setLogsData((prevLogs) =>
-      prevLogs.map((log) => (log.id === id ? { ...log, ...updatedLog } : log))
-    );
-  };
+  const getLogs = async()=>{
+    try {
+      const url = `${BACKEND_URL}/medications/read-logs/${user.role==="caretaker"?user.patientId:user.id}`;
+      const response = await axios.get(url);
+      const res = await response.data;
+      setLogsData(res.data.logs);
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
+
   const {user} = useLogin();
 
   return (
@@ -40,14 +48,7 @@ const LogScreen = () => {
           <SymptomsCard
             title={item.title}
             description={item.description}
-            createdAt={item.createdAt}
             role={user.role}
-            onEdit={() =>
-              navigation.navigate('AddSymptonScreen', {
-                log: item,
-                onSave: (updatedLog) => handleEditLog(item.id, updatedLog),
-              })
-            }
           />
         )}
         contentContainerStyle={styles.listContainer}
@@ -57,9 +58,7 @@ const LogScreen = () => {
       {user?.role==="patient" && <TouchableOpacity
         style={styles.addButton}
         onPress={() =>
-          navigation.navigate('AddSymptonScreen', {
-            onSave: handleAddLog,
-          })
+          navigation.navigate('AddSymptonScreen',{setLogsData})
         }
       >
         <MaterialIcons name="add" size={30} color="#fff" />

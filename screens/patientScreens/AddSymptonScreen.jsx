@@ -1,21 +1,36 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useLogin } from '../../context/LoginProvider';
+import { BACKEND_URL } from '../../constants/Ports';
 
-const AddSymptomScreen = ({ navigation, route }) => {
-  const { log, onSave } = route.params || {};
-  const [title, setTitle] = useState(log?.title || '');
-  const [description, setDescription] = useState(log?.description || '');
+const AddSymptomScreen = ({ navigation,route }) => {
+  const {setLogsData} = route.params;
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const {user} = useLogin();
 
-  const handleSave = () => {
-    const newLog = {
-      id: log?.id || String(Math.random()),
-      title,
-      description,
-      createdAt: log?.createdAt || new Date(),
-    };
-    onSave(newLog);
-    navigation.goBack();
+  const handleSave = async() => {
+    if(!title || !description){
+      Alert.alert("Missing field required");
+      return;
+    }
+    try {
+      const url = `${BACKEND_URL}/medications/set-log`;
+      const response = await axios.post(url,{patientId:user.id,title,description},{
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      });
+      const res = await response.data;
+      if(res.success){
+        navigation.goBack();
+      }
+      setLogsData((prev) => [...prev, { title, description }]);
+    } catch (error) {
+      console.log("Error : ",error);
+    }
   };
 
   return (

@@ -52,7 +52,7 @@ const HomeScreen = () => {
       </ScrollView>
 
       {/* Floating AI Chatbot Button */}
-      <TouchableOpacity style={styles.floatingButton}>
+      <TouchableOpacity onPress={()=>navigation.navigate("AiChatScreen")} style={styles.floatingButton}>
         <MaterialCommunityIcons name="robot-excited" size={36} color="#fff" />
       </TouchableOpacity>
     </View>

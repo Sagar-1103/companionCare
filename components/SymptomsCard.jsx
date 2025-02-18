@@ -2,17 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const SymptomsCard = ({ title, description, createdAt, onEdit,role }) => {
-  const formatDate = (date) => {
-    const d = new Date(date);
-    return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}/${d.getFullYear()}  ${d
-      .getHours()
-      .toString()
-      .padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
-  };
-
+const SymptomsCard = ({ title, description, onEdit,role }) => {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
@@ -26,7 +16,6 @@ const SymptomsCard = ({ title, description, createdAt, onEdit,role }) => {
         {description}
       </Text>
 
-      <Text style={styles.timestamp}>{formatDate(createdAt)}</Text>
     </View>
   );
 };
