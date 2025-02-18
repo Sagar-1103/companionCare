@@ -7,13 +7,15 @@ import MedicationReminder from '../screens/common/MedicationReminder';
 import HealthTrackerScreen from '../screens/common/HealthTrackerScreen';
 import {useLogin} from '../context/LoginProvider';
 import LocationScreen from '../screens/caretakerScreens/LocationScreen';
+import HomeScreen from '../screens/common/HomeScreen';
+import ProfileScreen from '../screens/common/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
 const tabData = [
   {
     name: 'Home',
-    component: HealthTrackerScreen,
+    component: HomeScreen,
     icons: {
       inactive: Logo,
       active: Logo,
@@ -28,8 +30,8 @@ const tabData = [
     },
   },
   {
-    name: 'Medication',
-    component: MedicationReminder,
+    name: 'Health',
+    component: HealthTrackerScreen,
     icons: {
       inactive: Logo,
       active: Logo,
@@ -37,7 +39,7 @@ const tabData = [
   },
   {
     name: 'Profile',
-    component: Home,
+    component: ProfileScreen,
     icons: {
       inactive: Logo,
       active: Logo,

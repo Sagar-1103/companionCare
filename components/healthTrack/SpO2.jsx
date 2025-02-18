@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 
-const SpO2 = ({ value, unit }) => {
+const SpO2 = ({ value, unit,onPress }) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.categoryText}>SpO</Text>
         <Icon name="droplet" size={28} color="#000" />

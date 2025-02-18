@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Heart = ({ value, unit }) => {
+const Heart = ({ value, unit,onPress }) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.categoryText}>Heart</Text>
         <Icon name="heartbeat" size={36} color="#000" />

@@ -18,14 +18,15 @@ const mockData = {
   '2025-02-03': { steps: 7111, calories: 750, distance: 4.6, duration: 110 },
 };
 
-const WalkTrackerScreen = () => {
+const WalkTrackerScreen = ({route}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const today = new Date();
-  const dates = Array.from({ length: 30 }, (_, i) => {
+  const dates = Array.from({ length: 5 }, (_, i) => {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     return date;
   });
+  const { healthDataHistory } = route.params;
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -45,13 +46,16 @@ const WalkTrackerScreen = () => {
   const { steps, calories, distance, duration } = selectedDateData;
   const goal = 10000;
   const progress = (steps / goal) * 100; 
+  
 
   const smallCirclesData = [
     {
       id: 1,
       tintColor: '#820eee', 
       icon: 'burn',
-      text: `${calories}kcal`,
+      text: `${healthDataHistory.find(
+        d => d.date === selectedDate.toISOString().split('T')[0],
+      )?.totalExerciseMinutes || 0}kcal`,
       iconSet: 'FontAwesome5',
     },
     {
@@ -65,7 +69,9 @@ const WalkTrackerScreen = () => {
       id: 3,
       tintColor: '#1F9AFF', 
       icon: 'timelapse',
-      text: `${duration}min`, 
+      text: `${healthDataHistory.find(
+        d => d.date === selectedDate.toISOString().split('T')[0],
+      )?.totalExerciseMinutes || 0}min`, 
       iconSet: 'MaterialIcons', 
     },
   ];
@@ -129,7 +135,9 @@ const WalkTrackerScreen = () => {
           {() => (
             <View style={styles.innerContent}>
               <Ionicons name="footsteps" size={70} color="#6B7280" />
-              <Text style={styles.stepText}>{steps.toLocaleString()}</Text>
+              <Text style={styles.stepText}>{healthDataHistory.find(
+                  d => d.date === selectedDate.toISOString().split('T')[0],
+                )?.totalSteps || 0}</Text>
             </View>
           )}
         </AnimatedCircularProgress>

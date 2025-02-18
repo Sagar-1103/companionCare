@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const SymptomsCard = ({ title, description, createdAt, onEdit }) => {
+const SymptomsCard = ({ title, description, createdAt, onEdit,role }) => {
   const formatDate = (date) => {
     const d = new Date(date);
     return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1)
@@ -17,9 +17,9 @@ const SymptomsCard = ({ title, description, createdAt, onEdit }) => {
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.loggerText}>{title}</Text>
-        <TouchableOpacity onPress={onEdit}>
+        {role==="patient" && <TouchableOpacity onPress={onEdit}>
           <MaterialIcons name="edit" size={20} color="#000" style={{ marginBottom: '6%' }} />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
 
       <Text style={styles.description} numberOfLines={5}>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#999',
-    left: '65%',
+    left: '62%',
   },
 });
 

@@ -9,10 +9,12 @@ import BackgroundService from 'react-native-background-actions';
 import PushNotification from 'react-native-push-notification';
 import Geolocation from "@react-native-community/geolocation";
 import { useLogin } from "../context/LoginProvider";
+import { useNavigation } from "@react-navigation/native";
 
 const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 
-const FallDetectionDemo = ({navigation}) => {
+const FallDetectionDemo = () => {
+  const navigation = useNavigation();
     const [accelSubscription, setAccelSubscription] = useState(null);
     const [gyroSubscription, setGyroSubscription] = useState(null);
     const [latestAcceleration, setLatestAcceleration] = useState({ x: 0, y: 0, z: 0 });
@@ -222,7 +224,7 @@ const options1 = {
   color: '#ff00ff',
   linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
   parameters: {
-      delay: 30000,
+      delay: 300000,
   },
 };
 
@@ -250,7 +252,7 @@ const stopBackgroundService1 = async()=>{
 
   return (
     <View style={styles.container}>
-          <Text style={{color: 'white', fontSize: 30, fontWeight: 600}}>Home</Text>
+          {/* <Text style={{color: 'white', fontSize: 30, fontWeight: 600}}>Home</Text>
           <TouchableOpacity
             onPress={startBackgroundService1}
             style={{
@@ -276,7 +278,7 @@ const stopBackgroundService1 = async()=>{
             <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
               Stop Services
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
   );
 };

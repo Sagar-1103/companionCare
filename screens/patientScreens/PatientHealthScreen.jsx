@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Modal, Button } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker'; // For date picker
@@ -7,6 +7,10 @@ import Sleep from '../../components/healthTrack/Sleep';
 import Heart from '../../components/healthTrack/Heart';
 import SpO2 from '../../components/healthTrack/SpO2';
 import { useNavigation } from '@react-navigation/native';
+import {initialize, readRecords} from 'react-native-health-connect';
+import { BACKEND_URL } from '../../constants/Ports';
+import { useLogin } from '../../context/LoginProvider';
+import axios from 'axios';
 
 // Mock data for activity values (for demonstration)
 const mockData = {
@@ -24,12 +28,14 @@ const mockData = {
 };
 
 // Main Screen Component
-const HealthTrackerScreen = () => {
+const PatientHealthScreen = () => {
   const navigation = useNavigation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [healthDataHistory, setHealthDataHistory] = useState([]);
+  const {user} = useLogin();
   const today = new Date();
-  const dates = Array.from({ length: 30 }, (_, i) => {
+  const dates = Array.from({ length: 5 }, (_, i) => {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     return date;
@@ -41,15 +47,9 @@ const HealthTrackerScreen = () => {
     setShowDatePicker(false); // Close the modal if open
   };
 
-  // Handle component clicks
-  const handleWalkPress = () => {
-    navigation.navigate('WalkTrackerScreen', { data: selectedDateData.walk });
-    // Navigate to a detailed screen or show a modal
-  };
-
   const handleSleepPress = () => {
     console.log('Sleep clicked:');
-    navigation.navigate('SleepTrackerScreen');
+    
     // Navigate to a detailed screen or show a modal
   };
 
@@ -77,6 +77,173 @@ const HealthTrackerScreen = () => {
     heart: { value: '0', unit: 'bpm' },
     spo2: { value: '0', unit: '%' },
   };
+
+  useEffect(() => {
+    const initializeHealthConnect = async () => {
+      try {
+        await initialize();
+        console.log('Health Connect initialized');
+      } catch (error) {
+        console.error('Health Connect initialization error:', error);
+      }
+    };
+    initializeHealthConnect();
+    fetchHealthData();
+  }, []);
+
+  const fetchHealthData = async () => {
+    try {
+      let healthHistory = [];
+for (let i = 0; i < 5; i++) {
+  const date = new Date();
+  date.setDate(today.getDate() - i);
+
+  const startTime = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  ).toISOString();
+  const endTime = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() + 1
+  ).toISOString();
+
+  // Steps Count
+  const { records: stepRecords } = await readRecords("Steps", {
+    timeRangeFilter: { operator: "between", startTime, endTime },
+  });
+  const totalSteps = stepRecords.reduce(
+    (total, record) => total + record.count,
+    0
+  );
+
+  // Heart Rate
+  const { records: heartRecords } = await readRecords("HeartRate", {
+    timeRangeFilter: { operator: "between", startTime, endTime },
+  });
+  const avgHeartRate =
+    heartRecords.length > 0
+      ? (
+          heartRecords.reduce(
+            (total, record) => total + record.samples[0].beatsPerMinute,
+            0
+          ) / heartRecords.length
+        ).toFixed(0)
+      : 0;
+
+  // Oxygen Saturation (SpO2)
+  const { records: spo2Records } = await readRecords("OxygenSaturation", {
+    timeRangeFilter: { operator: "between", startTime, endTime },
+  });
+  const avgSpO2 =
+    spo2Records.length > 0
+      ? (
+          spo2Records.reduce(
+            (total, record) => total + record.percentage,
+            0
+          ) / spo2Records.length
+        ).toFixed(0)
+      : 0;
+
+  // Sleep Duration
+  const { records: sleepRecords } = await readRecords("SleepSession", {
+    timeRangeFilter: { operator: "between", startTime, endTime },
+  });
+  const totalSleepMs = sleepRecords.reduce(
+    (total, record) =>
+      total + (new Date(record.endTime) - new Date(record.startTime)),
+    0
+  );
+  const totalSleepHours = Math.floor(totalSleepMs / (1000 * 60 * 60));
+
+  // // Distance
+  // const { records: distanceRecords } = await readRecords("Distance", {
+  //   timeRangeFilter: { operator: "between", startTime, endTime },
+  // });
+  // const totalDistance = distanceRecords.reduce(
+  //   (total, record) => total + record.distance,
+  //   0
+  // );
+
+  // Calories Burned
+  const { records: calorieRecords } = await readRecords("TotalCaloriesBurned", {
+    timeRangeFilter: { operator: "between", startTime, endTime },
+  });
+  console.log(calorieRecords);
+  
+  const totalCaloriesBurned = calorieRecords.reduce(
+    (total, record) => total + record.energy,
+    0
+  );
+
+  // Exercise Sessions
+  const { records: exerciseRecords } = await readRecords("ExerciseSession", {
+    timeRangeFilter: { operator: "between", startTime, endTime },
+  });
+  const totalExerciseMinutes = exerciseRecords.reduce(
+    (total, record) =>
+      total + (new Date(record.endTime) - new Date(record.startTime)) / 60000,
+    0
+  );
+
+  // Store in health history
+  healthHistory.push({
+    date: date.toISOString().split("T")[0],
+    totalSteps,
+    avgHeartRate,
+    avgSpO2,
+    totalSleepHours,
+    // totalDistance: totalDistance.toFixed(2), // Keeping 2 decimal places
+    totalCaloriesBurned: totalCaloriesBurned,
+    totalExerciseMinutes: Math.round(totalExerciseMinutes), // Rounding minutes
+  });
+}
+
+console.log(healthHistory);
+
+      
+      setHealthDataHistory(healthHistory);
+      const url = `${BACKEND_URL}/health/${user?.id}`;
+      for (const health of healthHistory) {
+        try {
+          const healthData = {
+            date: health.date,
+            heartRate: parseInt(health.avgHeartRate, 10),
+            bloodPressure: { systolic: 120, diastolic: 80 },
+            bodyTemperature: 36.5,
+            bloodSugar: 95.4,
+            spo2: parseInt(health.avgSpO2, 10),
+            sleep: parseFloat(health.totalSleepHours),
+            steps: health.totalSteps,
+          };
+          console.log(healthData.date,parseInt(health.avgHeartRate, 10),parseInt(health.avgSpO2, 10),parseFloat(health.totalSleepHours),health.totalSteps);
+          
+          const response = await axios.post(url, {
+            "date": health.date,
+            "heartRate": parseInt(health.avgHeartRate, 10) || 70,
+            "bloodPressure": {
+              "systolic": 124,
+              "diastolic": 80
+            },
+            "bodyTemperature": 36.5,
+            "bloodSugar": 95.4,
+            "spo2": parseInt(health.avgSpO2, 10) || 98,
+            "sleep": parseFloat(health.totalSleepHours) || 7.5,
+            "steps": health.totalSteps || 8500
+        }, {
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          console.log(response.data);
+        } catch (error) {
+          console.error('Error sending health data:', error?.message || error);
+        }
+      }
+    } catch (error) {
+      console.log("Error : ",error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -137,12 +304,39 @@ const HealthTrackerScreen = () => {
       {/* Activity Data Grid */}
       <View style={styles.gridContainer}>
         <View style={styles.row}>
-          <Walk value={selectedDateData.walk.value} unit={selectedDateData.walk.unit} onPress={handleWalkPress} />
-          <Sleep value={selectedDateData.sleep.value} unit={selectedDateData.sleep.unit} onPress={handleSleepPress} />
+          <Walk  
+          value={
+                healthDataHistory.find(
+                  d => d.date === selectedDate.toISOString().split('T')[0],
+                )?.totalSteps || 0
+              }
+              healthDataHistory={healthDataHistory}
+              unit="Steps" />
+          <Sleep
+          value={
+            healthDataHistory.find(
+              d => d.date === selectedDate.toISOString().split('T')[0],
+            )?.totalSleepHours || 0
+          }
+          unit="Hrs" 
+          onPress={handleSleepPress} />
         </View>
         <View style={styles.row}>
-          <Heart value={selectedDateData.heart.value} unit={selectedDateData.heart.unit} onPress={handleHeartPress} />
-          <SpO2 value={selectedDateData.spo2.value} unit={selectedDateData.spo2.unit} onPress={handleSpO2Press} />
+          <Heart 
+          value={
+            healthDataHistory.find(
+              d => d.date === selectedDate.toISOString().split('T')[0],
+            )?.avgHeartRate || 0
+          }
+          unit="bpm" onPress={handleHeartPress} />
+          <SpO2 
+          value={
+            healthDataHistory.find(
+              d => d.date === selectedDate.toISOString().split('T')[0],
+            )?.avgSpO2 || 0
+          }
+          unit="%"
+          onPress={handleSpO2Press} />
         </View>
       </View>
     </View>
@@ -214,11 +408,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#000',
-    marginTop: '0%',
+    marginTop: '4%',
     marginLeft: '5%',
   },
   gridContainer: {
-    marginBottom: '-6%',
+    marginBottom: '14%',
   },
   row: {
     flexDirection: 'row',
@@ -239,4 +433,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HealthTrackerScreen;
+export default PatientHealthScreen;

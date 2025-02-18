@@ -1,10 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useLogin } from '../../context/LoginProvider';
 
-const Sleep = ({ value, unit }) => {
+const Sleep = ({ value, unit,onPress }) => {
+  const {user} = useLogin();
+  console.log(user);
+  
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.categoryText}>Sleep</Text>
         <Icon name="moon" size={28} color="#000" />

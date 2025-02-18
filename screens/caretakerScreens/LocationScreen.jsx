@@ -51,7 +51,7 @@ const options = {
   color: '#ff00ff',
   linkingURI: 'yourSchemeHere://chat/jane',
   parameters: {
-      delay: 30000,
+      delay: 3000000,
   },
 };
 
@@ -158,6 +158,7 @@ const handleRadiusSubmit = async()=>{
             setPatientLocated(false)
           }
         }
+        setLoading(false);
       }
     } catch (error) {
       console.log("Error : ",error);
@@ -199,9 +200,6 @@ const handleRadiusSubmit = async()=>{
     } catch (error) {
       console.log("Error : ",error);
       stopServices();
-    }
-    finally {
-      setLoading(false);
     }
   }
 

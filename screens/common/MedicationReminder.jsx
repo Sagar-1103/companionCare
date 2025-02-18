@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  Alert,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import { Picker } from '@react-native-picker/picker';
@@ -18,6 +19,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {BACKEND_URL} from "../../constants/Ports";
+import {useLogin} from "../../context/LoginProvider";
+import axios from 'axios';
 
 const MedicationReminder = ({navigation}) => {
   const meals = [
@@ -38,6 +42,7 @@ const MedicationReminder = ({navigation}) => {
   const [isBeforeMeal, setIsBeforeMeal] = useState(false);
   const [isAfterMeal, setIsAfterMeal] = useState(false);
   const [time, setTime] = useState('');
+  const {user} = useLogin();
 
   const handleMealSelection = (meal) => {
     setSelectedMeals((prev) =>
@@ -53,17 +58,17 @@ const MedicationReminder = ({navigation}) => {
   const formatDate = (date) => (date ? date.toLocaleDateString() : '');
 
   const handleSubmit = () => {
-    console.log({
-      selectedMeals,
-      medicineType,
-      medicineName,
-      dosageUnit,
-      fromDate,
-      toDate,
-      isBeforeMeal,
-      isAfterMeal,
-      time,
-    });
+    if(!selectedMeals?.length || !medicineType || !medicineName || !dosageUnit || !fromDate || !toDate || !time){
+      Alert.alert("Missing Fields");
+    }
+    console.log({selectedMeals,medicineType,medicineName,dosageUnit,fromDate,toDate,isBeforeMeal,isAfterMeal,time,});
+    const id = user.role==="patient"?user.id:user.patientId;
+    const url = `${BACKEND_URL}/medications/set-medication/${id}`;
+    selectedMeals.forEach(async(meal)=>{
+      const response = await axios.post(url,{medicineName,medicineType,medicineDosage:dosageUnit,timing:meal.toLowerCase(),medText:"Have it",startDate:fromDate,endDate:toDate,before:isBeforeMeal?parseInt(time):0,after:isAfterMeal?parseInt(time):0});
+      const res = await response.data;
+      console.log(res.data);
+    })
   };
 
   return (

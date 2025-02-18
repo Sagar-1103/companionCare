@@ -2,19 +2,25 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Water from '../../components/healthTrack/Water'; // Example component
-import DiebetesComponent from '../../componentsDiebetesComponent';
-import MedicationnReminderButton from '../../componentsMedicationnReminderButton';
-import TwachAIButton from '../../componentsTwachAIButton';
-import SymptomLoggerButton from '../../componentsSymptomLoggerButton';
+import Water from '../../components/healthTrack/Water';
+import DiebetesComponent from '../../components/DiebetesComponent';
+import MedicationnReminderButton from '../../components/MedicationnReminderButton';
+import TwachAIButton from '../../components/TwachAIButton';
+import SymptomLoggerButton from '../../components/SymptomLoggerButton';
+import FallDetectionDemo from '../../testScreens/FallDetectionDemo';
+import { useLogin } from '../../context/LoginProvider';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
+  const {user} = useLogin();
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       {/* Top Header */}
       <View style={styles.header}>
         <Text style={styles.title}>Home</Text>
-        <TouchableOpacity>
+        {user.role==="patient" && user.caretakerId && <FallDetectionDemo/>}
+        <TouchableOpacity onPress={()=>navigation.navigate("ChatContactsList")} >
           <Icon name="wechat" size={40} color="#003366" />
         </TouchableOpacity>
       </View>
@@ -68,7 +74,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    paddingBottom: '128%', // Extra space for floating button
+    paddingBottom: '150%', // Extra space for floating button
   },
   row: {
     flexDirection: 'row',

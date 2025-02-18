@@ -19,12 +19,25 @@ import SetSpeedDial from '../screens/auth/caretaker/SetSpeedDial';
 import SetHomeLocation from '../screens/auth/caretaker/SetHomeLocation';
 import UserCodeScreen from '../screens/auth/caretaker/UserCodeScreen';
 import CaretakerTabNavigator from './CaretakerNavigation';
-import ChatScreen from '../testScreens/ChatScreen';
+import ChatScreen from '../screens/common/ChatScreen';
 import PatientChat from '../testScreens/PatientChat';
 import { PermissionsAndroid, Platform } from 'react-native';
 import FallDetectionPage from '../screens/common/FallDetectionPage';
 import MedicineListScreen from '../screens/patientScreens/MedicineListScreen';
-
+import TwatchAIScreen from '../screens/common/TwatchAIScreen';
+import MedicationReminder from '../screens/common/MedicationReminder';
+import LogScreen from '../screens/patientScreens/LogsScreen';
+import SymptomsCard from '../components/SymptomsCard';
+import WalkTrackerScreen from '../screens/common/WalkTrackerScreen';
+import SleepTrackerScreen from '../screens/common/SleepTrackerScreen';
+import HeartTrackerScreen from '../screens/common/HeartTrackerScreen';
+import SpO2TrackerScreen from '../screens/common/SpO2TrackerScreen';
+import AddSymptonScreen from "../screens/patientScreens/AddSymptonScreen";
+import InsulinDosageScreen from '../screens/patientScreens/InsulinDosageScreen';
+import InsulinDosageRecommendation from "../screens/patientScreens/InsulinDosageRecommendation";
+import ChatContactsList from '../screens/common/ChatContactList';
+import ProfileDisplayScreen from '../screens/common/ProfileDisplayScreen';
+import Selection from '../screens/auth/common/Selection';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -113,8 +126,19 @@ const AppNavigator = () => {
         return (
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="TabNavigation"  >
                     <Stack.Screen name="TabNavigation" component={CaretakerTabNavigator}/>
-                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
                     <Stack.Screen name="MedicineListScreen" component={MedicineListScreen}/>
+                    <Stack.Screen name="TwatchAIScreen" component={TwatchAIScreen}/>
+                    <Stack.Screen name="MedicationReminder" component={MedicationReminder}/>
+                    <Stack.Screen name="LogScreen" component={LogScreen}/>
+                    <Stack.Screen name="SymptomsCard" component={SymptomsCard}/>
+                    <Stack.Screen name="WalkTrackerScreen" component={WalkTrackerScreen}/>
+                    <Stack.Screen name="SleepTrackerScreen" component={SleepTrackerScreen}/>
+                    <Stack.Screen name="HeartTrackerScreen" component={HeartTrackerScreen}/>
+                    <Stack.Screen name="SpO2TrackerScreen" component={SpO2TrackerScreen}/>
+                    <Stack.Screen name="ChatContactsList" component={ChatContactsList}/>
+                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
+                    <Stack.Screen name="ProfileDisplayScreen" component={ProfileDisplayScreen}/>
+                    <Stack.Screen name="Selection" component={Selection}/>
         </Stack.Navigator>
         );
     }
@@ -141,6 +165,20 @@ const AppNavigator = () => {
                     <Stack.Screen name="PatientTabNavigation" component={PatientTabNavigation}/>
                     <Stack.Screen name="PatientChat" component={PatientChat}/>
                     <Stack.Screen name="FallDetectionPage" component={FallDetectionPage}/>
+                    <Stack.Screen name="MedicineListScreen" component={MedicineListScreen}/>
+                    <Stack.Screen name="TwatchAIScreen" component={TwatchAIScreen}/>
+                    <Stack.Screen name="MedicationReminder" component={MedicationReminder}/>
+                    <Stack.Screen name="LogScreen" component={LogScreen}/>
+                    <Stack.Screen name="SymptomsCard" component={SymptomsCard}/>
+                    <Stack.Screen name="WalkTrackerScreen" component={WalkTrackerScreen}/>
+                    <Stack.Screen name="SleepTrackerScreen" component={SleepTrackerScreen}/>
+                    <Stack.Screen name="HeartTrackerScreen" component={HeartTrackerScreen}/>
+                    <Stack.Screen name="SpO2TrackerScreen" component={SpO2TrackerScreen}/>
+                    <Stack.Screen name="AddSymptonScreen" component={AddSymptonScreen}/>
+                    <Stack.Screen name="InsulinDosageScreen" component={InsulinDosageScreen}/>
+                    <Stack.Screen name="InsulinDosageRecommendation" component={InsulinDosageRecommendation}/>
+                    <Stack.Screen name="ChatContactsList" component={ChatContactsList}/>
+                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
         </Stack.Navigator>
         );
     }
