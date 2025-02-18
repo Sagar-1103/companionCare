@@ -63,53 +63,71 @@ const RareCase = () => {
         <Text style={styles.strong}>Treat poisoning.</Text> Poisoning can occur as a result of natural toxins (i.e. snake bite) or chemical combinations. If an animal may be responsible for poisoning, try to (safely) kill it, bag it, and bring it with you to poison control.
       </Text>
      
-    </ScrollView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  paragraph: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  step: {
-    fontWeight: 'bold',
-  },
-  highlight: {
-    color: 'red',
-  },
-  strong: {
-    fontWeight: 'bold',
-  },
-  image: {
-    width: '100%',
-    height: 250,
-    marginBottom: 10,
-  },
-  bullets: {
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  bullet: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-});
+    <Text style={styles.endline}>
+            Saksham Thakur
+          </Text>
+        </ScrollView>
+      );
+    };
+    
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: 'rgb(0, 87, 158)',
+      },
+      subtitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 20,
+        marginBottom: 10,
+        color: 'rgb(0, 87, 158)',
+      },
+      paragraph: {
+        fontSize: 16,
+        marginBottom: 10,
+        color: '#000'
+      },
+      step: {
+        fontWeight: 'bold',
+        color: 'rgb(0, 87, 158)',
+      },
+      highlight: {
+        color: 'red',
+      },
+      strong: {
+        fontWeight: 'bold',
+        color: 'rgb(0, 87, 158)',
+      },
+      image: {
+        width: '100%',
+        height: 250,
+        marginBottom: 10,
+        marginTop: 20,
+        borderTopWidth: 5,
+        borderColor: '#000',
+        paddingTop: 10
+      },
+      bullets: {
+        marginTop: 10,
+        marginBottom: 10,
+      },
+      bullet: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: '#000'
+      },
+      endline: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: '#fff'
+      }
+    });
 
 export default RareCase;

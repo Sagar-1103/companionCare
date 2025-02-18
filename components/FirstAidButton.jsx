@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 const FirstAidButton = () => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={()=>navigation.navigate("FirstAidList")} style={styles.container}>
+    <TouchableOpacity onPress={()=>navigation.navigate("FirstAid")} style={styles.container}>
       {/* Icon */}
       <FontAwesome name="medkit" size={28} color="#000" style={{left:'42%', top:'5%'}}/>
 

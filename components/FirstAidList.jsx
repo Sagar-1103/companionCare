@@ -3,56 +3,57 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import Icon from "react-native-vector-icons/Ionicons";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import { useNavigation } from '@react-navigation/native';
 
-const FirstAid = ({ navigation }) => {
+const FirstAid = ({navigation}) => {
   return (
     <View style={styles.container}>
       {/* Back Button and Title */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        {/* <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={32} color="#000" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={styles.title}>First Aid</Text>
       </View>
       <ScrollView>
       {/* Touchable Buttons */}
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Basic Steps")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("FirstAidGuide")}>
         <Icon name="medkit" size={42} color="#000" />
         <Text style={styles.buttonText}>Basic First Aid</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Common Problems")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("CommonProb")}>
         <Icon name="bandage" size={42} color="#000" />
         <Text style={styles.buttonText}>Common First Aid Scenarios</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Rare Case")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("RareCase")}>
         <Fontisto name="doctor" size={42} color="#000" />
         <Text style={styles.buttonText}>Rarer First Aid Cases</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Cuts")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("CommonProb")}>
         <Fontisto name="surgical-knife" size={42} color="#000" />
         <Text style={styles.buttonText}>First Aid for Cuts</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Burns")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("CommonProb")}>
       <Fontisto name="fire" size={42} color="#000" />
         <Text style={styles.buttonText}>First Aid for Burns</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Fractures")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("CommonProb")}>
       <FontAwesome6 name="bone" size={42} color="#000" />
         <Text style={styles.buttonText}>First Aid for Fractures</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Choking")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("CommonProb")}>
       <FontAwesome6 name="head-side-cough" size={42} color="#000" />
         <Text style={styles.buttonText}>First Aid for Choking</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />

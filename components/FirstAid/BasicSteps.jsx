@@ -142,53 +142,71 @@ const FirstAidGuide = () => {
         <Text style={styles.step}>7. </Text>
         <Text style={styles.strong}>Make sure the person is warm as you wait for medical help.</Text> Drape a towel or a blanket over the person if you have one; if you don't, remove some of your own clothing (such as your coat or jacket) and use it as a cover until medical help arrives. However, if the person has a heatstroke, do not cover him or keep him warm. Instead, try to cool him by fanning him and damping him.
       </Text>
-    </ScrollView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  paragraph: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  step: {
-    fontWeight: 'bold',
-  },
-  highlight: {
-    color: 'red',
-  },
-  strong: {
-    fontWeight: 'bold',
-  },
-  image: {
-    width: '100%',
-    height: 250,
-    marginBottom: 10,
-  },
-  bullets: {
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  bullet: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-});
+    <Text style={styles.endline}>
+            Saksham Thakur
+          </Text>
+        </ScrollView>
+      );
+    };
+    
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: 'rgb(0, 87, 158)',
+      },
+      subtitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 20,
+        marginBottom: 10,
+        color: 'rgb(0, 87, 158)',
+      },
+      paragraph: {
+        fontSize: 16,
+        marginBottom: 10,
+        color: '#000'
+      },
+      step: {
+        fontWeight: 'bold',
+        color: 'rgb(0, 87, 158)',
+      },
+      highlight: {
+        color: 'red',
+      },
+      strong: {
+        fontWeight: 'bold',
+        color: 'rgb(0, 87, 158)',
+      },
+      image: {
+        width: '100%',
+        height: 250,
+        marginBottom: 10,
+        marginTop: 20,
+        borderTopWidth: 5,
+        borderColor: '#000',
+        paddingTop: 10
+      },
+      bullets: {
+        marginTop: 10,
+        marginBottom: 10,
+      },
+      bullet: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: '#000'
+      },
+      endline: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: '#fff'
+      }
+    });
 
 export default FirstAidGuide;

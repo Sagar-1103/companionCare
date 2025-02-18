@@ -43,6 +43,10 @@ import CodeDisplayScreen from '../screens/common/CodeDisplayScreen';
 import CodeShowScreen from '../screens/common/CodeShowScreen';
 import DiseaseDetectionScreen from '../screens/common/DiseaseDetectionScreen';
 import DetectingScreen from '../screens/common/DetectingScreen';
+import FirstAid from '../components/FirstAidList';
+import FirstAidGuide from '../components/FirstAid/BasicSteps';
+import CommonProb from '../components/FirstAid/CommonProblems';
+import RareCase from '../components/FirstAid/RareCase';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -148,6 +152,11 @@ const AppNavigator = () => {
                     <Stack.Screen name="WaterIntakeScreen" component={WaterIntakeScreen}/>
                     <Stack.Screen name="DetectingScreen" component={DiseaseDetectionScreen}/>
                     <Stack.Screen name="DiseaseDetectionScreen" component={DetectingScreen}/>
+                    <Stack.Screen name="FirstAid" component={FirstAid}/>
+                    <Stack.Screen name="FirstAidGuide" component={FirstAidGuide}/>
+                    <Stack.Screen name="CommonProb" component={CommonProb}/>
+                    <Stack.Screen name="RareCase" component={RareCase}/>
+
         </Stack.Navigator>
         );
     }
@@ -186,6 +195,10 @@ const AppNavigator = () => {
                     <Stack.Screen name="WaterIntakeScreen" component={WaterIntakeScreen}/>
                     <Stack.Screen name="DetectingScreen" component={DetectingScreen}/>
                     <Stack.Screen name="DiseaseDetectionScreen" component={DiseaseDetectionScreen}/>
+                    <Stack.Screen name="FirstAid" component={FirstAid}/>
+                    <Stack.Screen name="FirstAidGuide" component={FirstAidGuide}/>
+                    <Stack.Screen name="CommonProb" component={CommonProb}/>
+                    <Stack.Screen name="RareCase" component={RareCase}/>
 
         </Stack.Navigator>
         );
@@ -217,6 +230,11 @@ const AppNavigator = () => {
                     <Stack.Screen name="WaterIntakeScreen" component={WaterIntakeScreen}/>
                     <Stack.Screen name="DetectingScreen" component={DetectingScreen}/>
                     <Stack.Screen name="DiseaseDetectionScreen" component={DiseaseDetectionScreen}/>
+                    <Stack.Screen name="FirstAid" component={FirstAid}/>
+                    <Stack.Screen name="FirstAidGuide" component={FirstAidGuide}/>
+                    <Stack.Screen name="CommonProb" component={CommonProb}/>
+                    <Stack.Screen name="RareCase" component={RareCase}/>
+
         </Stack.Navigator>
         );
     }
