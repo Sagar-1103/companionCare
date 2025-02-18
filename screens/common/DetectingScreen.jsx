@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const DetectingScreen = () => {
   const [dots, setDots] = useState('.'); // Initial state: one dot
-
+  const navigation = useNavigation();
   useEffect(() => {
     // Set up an interval to update the dots every second
     const interval = setInterval(() => {
@@ -18,6 +19,12 @@ const DetectingScreen = () => {
     // Clean up the interval when the component unmounts
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(()=>{
+    setTimeout(()=>{
+      navigation.navigate("DiseaseDetectionScreen")
+    },3000)
+  },[])
 
   return (
     <View style={styles.container}>

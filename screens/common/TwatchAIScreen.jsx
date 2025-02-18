@@ -8,11 +8,26 @@ import {
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ImagePicker from 'react-native-image-crop-picker';
+import { useNavigation } from '@react-navigation/native';
 
 const TwatchAIScreen = () => {
-  const handleOpenCamera = () => {
-    console.log('Opening camera...');
-  };
+  const navigation = useNavigation();
+
+  const handleUpload = async()=>{
+    try {
+        ImagePicker.openCamera({
+            width: 300,
+            height: 400,
+            cropping: true,
+          }).then(image => {
+            console.log(image);
+            navigation.navigate("DetectingScreen");
+          });
+    } catch (error) {
+        console.log("error : ",error);
+    }
+}
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,7 +62,7 @@ const TwatchAIScreen = () => {
         </View>
 
         {/* Camera Button */}
-        <TouchableOpacity style={styles.button} onPress={handleOpenCamera}>
+        <TouchableOpacity style={styles.button} onPress={handleUpload}>
           <Text style={styles.buttonText}>Open Camera</Text>
         </TouchableOpacity>
       </View>

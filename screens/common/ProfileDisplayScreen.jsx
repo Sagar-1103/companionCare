@@ -21,7 +21,7 @@ const ProfileDisplayScreen = () => {
   const userRole = user.role === "caretaker"
     ? "both"
     : user.role === "patient" && !user.caretakerId
-    ? "caretaker"
+    ? "patient"
     : user.role === "patient" && user.caretakerId
     ? "both"
     : "";

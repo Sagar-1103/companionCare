@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Import the icon set you want to use
@@ -13,6 +14,7 @@ const DiseaseDetectionScreen = ({
         description: 'Psoriasis Is A Chronic (Long-Lasting) Disease In Which The Immune System Becomes Overactive, Causing Skin Cells To Multiply Too Quickly. Patches Of Skin Become Scaly And Inflamed, Most Often On The Scalp, Elbows, Or Knees, But Other Parts Of The Body Can Be Affected As Well.Psoriasis Is A Chronic (Long-Lasting) Disease In Which The Immune System Becomes Overactive, Causing Skin Cells To Multiply Too Quickly. Patches Of Skin Become Scaly And Inflamed, Most Often On The Scalp, Elbows, Or Knees, But Other Parts Of The Body Can Be Affected As Well',
     }
 }) => {
+    const navigation = useNavigation();
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -53,7 +55,7 @@ const DiseaseDetectionScreen = ({
             </View>
 
             {/* Back Button */}
-            <TouchableOpacity style={styles.backButton}>
+            <TouchableOpacity onPress={()=>navigation.navigate("TwatchAIScreen")} style={styles.backButton}>
                 <Text style={styles.backButtonText}>Go Back</Text>
             </TouchableOpacity>
         </View>

@@ -40,6 +40,9 @@ import ChatContactsList from '../screens/common/ChatContactList';
 import ProfileDisplayScreen from '../screens/common/ProfileDisplayScreen';
 import Selection from '../screens/auth/common/Selection';
 import CodeDisplayScreen from '../screens/common/CodeDisplayScreen';
+import CodeShowScreen from '../screens/common/CodeShowScreen';
+import DiseaseDetectionScreen from '../screens/common/DiseaseDetectionScreen';
+import DetectingScreen from '../screens/common/DetectingScreen';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -141,6 +144,10 @@ const AppNavigator = () => {
                     <Stack.Screen name="ChatScreen" component={ChatScreen}/>
                     <Stack.Screen name="ProfileDisplayScreen" component={ProfileDisplayScreen}/>
                     <Stack.Screen name="Selection" component={Selection}/>
+                    <Stack.Screen name="CodeShowScreen" component={CodeShowScreen}/>
+                    <Stack.Screen name="WaterIntakeScreen" component={WaterIntakeScreen}/>
+                    <Stack.Screen name="DetectingScreen" component={DiseaseDetectionScreen}/>
+                    <Stack.Screen name="DiseaseDetectionScreen" component={DetectingScreen}/>
         </Stack.Navigator>
         );
     }
@@ -158,7 +165,27 @@ const AppNavigator = () => {
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="PatientTabNavigation"  >
                     <Stack.Screen name="PatientTabNavigation" component={PatientTabNavigation}/>
                     <Stack.Screen name="PatientChat" component={PatientChat}/>
+                    <Stack.Screen name="MedicineListScreen" component={MedicineListScreen}/>
+                    <Stack.Screen name="TwatchAIScreen" component={TwatchAIScreen}/>
+                    <Stack.Screen name="MedicationReminder" component={MedicationReminder}/>
+                    <Stack.Screen name="LogScreen" component={LogScreen}/>
+                    <Stack.Screen name="SymptomsCard" component={SymptomsCard}/>
+                    <Stack.Screen name="WalkTrackerScreen" component={WalkTrackerScreen}/>
+                    <Stack.Screen name="SleepTrackerScreen" component={SleepTrackerScreen}/>
+                    <Stack.Screen name="HeartTrackerScreen" component={HeartTrackerScreen}/>
+                    <Stack.Screen name="SpO2TrackerScreen" component={SpO2TrackerScreen}/>
+                    <Stack.Screen name="AddSymptonScreen" component={AddSymptonScreen}/>
+                    <Stack.Screen name="InsulinDosageScreen" component={InsulinDosageScreen}/>
+                    <Stack.Screen name="InsulinDosageRecommendation" component={InsulinDosageRecommendation}/>
+                    <Stack.Screen name="ChatContactsList" component={ChatContactsList}/>
+                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
+                    <Stack.Screen name="ProfileDisplayScreen" component={ProfileDisplayScreen}/>
                     <Stack.Screen name="Selection" component={Selection}/>
+                    <Stack.Screen name="CodeDisplayScreen" component={CodeDisplayScreen}/>
+                    <Stack.Screen name="CodeShowScreen" component={CodeShowScreen}/>
+                    <Stack.Screen name="WaterIntakeScreen" component={WaterIntakeScreen}/>
+                    <Stack.Screen name="DetectingScreen" component={DetectingScreen}/>
+                    <Stack.Screen name="DiseaseDetectionScreen" component={DiseaseDetectionScreen}/>
 
         </Stack.Navigator>
         );
@@ -186,7 +213,10 @@ const AppNavigator = () => {
                     <Stack.Screen name="ProfileDisplayScreen" component={ProfileDisplayScreen}/>
                     <Stack.Screen name="Selection" component={Selection}/>
                     <Stack.Screen name="CodeDisplayScreen" component={CodeDisplayScreen}/>
+                    <Stack.Screen name="CodeShowScreen" component={CodeShowScreen}/>
                     <Stack.Screen name="WaterIntakeScreen" component={WaterIntakeScreen}/>
+                    <Stack.Screen name="DetectingScreen" component={DetectingScreen}/>
+                    <Stack.Screen name="DiseaseDetectionScreen" component={DiseaseDetectionScreen}/>
         </Stack.Navigator>
         );
     }

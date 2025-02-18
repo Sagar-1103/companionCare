@@ -46,7 +46,7 @@ const ProfileScreen = () => {
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>}
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Pairing Code")}>
+      <TouchableOpacity style={styles.button} onPress={() =>navigation.navigate("CodeShowScreen")} >
         <Icon name="qr-code" size={42} color="#000" />
         <Text style={styles.buttonText}>Pairing Code</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />
