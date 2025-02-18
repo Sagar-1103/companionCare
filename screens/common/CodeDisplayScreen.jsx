@@ -2,10 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useLogin } from '../../context/LoginProvider';
 
 const CodeDisplayScreen = () => {
   const navigation = useNavigation();
-  const codeToShow = "DOCTOR123"; // Example code
+  const {user} = useLogin();
+  const codeToShow = user.code; // Example code
 
   return (
     <View style={styles.container}>

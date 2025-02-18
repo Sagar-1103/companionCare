@@ -10,7 +10,7 @@ import SymptomLoggerButton from '../../components/SymptomLoggerButton';
 import FallDetectionDemo from '../../testScreens/FallDetectionDemo';
 import { useLogin } from '../../context/LoginProvider';
 import { useNavigation } from '@react-navigation/native';
-
+import MedicationDemo from "../../testScreens/MedicationDemo";
 const HomeScreen = () => {
   const {user} = useLogin();
   const navigation = useNavigation();
@@ -20,6 +20,7 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <Text style={styles.title}>Home</Text>
         {user.role==="patient" && user.caretakerId && <FallDetectionDemo/>}
+        {user.role==="patient" && user.caretakerId && <MedicationDemo/>}
         <TouchableOpacity onPress={()=>navigation.navigate("ChatContactsList")} >
           <Icon name="wechat" size={40} color="#003366" />
         </TouchableOpacity>

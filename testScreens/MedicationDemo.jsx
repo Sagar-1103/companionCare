@@ -5,12 +5,11 @@ import { BACKEND_URL } from "../constants/Ports";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BackgroundService from 'react-native-background-actions';
+import PushNotification from "react-native-push-notification";
 
 const sleep = time => new Promise(resolve => setTimeout(() => resolve(), time));
 
 const MedicationReminderScreen = () => {
-  const [time, setTime] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
   const {user,setMedications,medications} = useLogin(); 
   // console.log(medications);
   
@@ -19,12 +18,12 @@ const MedicationReminderScreen = () => {
     const {delay} = taskDataArguments;
     await new Promise(async resolve => {
       for (let i = 0; BackgroundService.isRunning(); i++) {
-        medications.forEach(medication => {
-          // const givenDate = new Date(medication.timing);
-          const givenDate = new Date(`Mon Feb 10 2025 20:17:00 GMT+0530 (India Standard Time)`);
+        medications?.forEach(medication => {
+          const givenDate = new Date(medication.timing);
+          // const givenDate = new Date(`Mon Feb 10 2025 20:17:00 GMT+0530 (India Standard Time)`);
           const now = new Date();
-          const startDate = new Date("2025-02-05");
-          const endDate = new Date("2025-02-30");
+          const startDate = new Date(medication.startDate);
+          const endDate = new Date(medication.endDate);
 
           let medTime = givenDate;
           if(medication.before){
@@ -38,6 +37,7 @@ const MedicationReminderScreen = () => {
             if (medTime.toLocaleTimeString() === now.toLocaleTimeString()) {
               //Todo: Handle alert logic
               console.log("The dates match!");
+              showMedNotification(medication.medicineName)
           } else {
             console.log(medTime.toLocaleTimeString(),now.toLocaleTimeString());
           }
@@ -48,6 +48,20 @@ const MedicationReminderScreen = () => {
         });
         await sleep(delay);
       }
+    });
+  };
+
+  const showMedNotification = (title) => {
+    PushNotification.localNotification({
+      channelId: "Medication-alert", 
+      title: `${title}`,
+      message: `You have to take the medicine now .`,  
+      bigText: "Tap this notification for more details.",  
+      importance: "high",  
+      playSound: true,  
+      soundName: "default",  
+      actions: ["Confirm"],  
+      invokeApp: true,
     });
   };
 
@@ -73,17 +87,11 @@ const MedicationReminderScreen = () => {
       console.log('Error : ', error);
     }
   };
-  const stopBackgroundServices = async () => {
-    try {
-      await BackgroundService.stop();
-    } catch (error) {
-      console.log('Error : ', error);
-    }
-  };
 
-  // useEffect(()=>{
-  //   getMedications();
-  // },[]);
+  useEffect(()=>{
+    getMedications();
+    startBackgroundServices();
+  },[]);
 
   const getMedications = async()=>{
     try {
@@ -97,77 +105,11 @@ const MedicationReminderScreen = () => {
       console.log("Error : ",error.message);
     }
   }
-
-  const onChange = (event, selectedTime) => {
-    if (selectedTime) {
-      setTime(selectedTime);
-    }
-    setShowPicker(false);
-  };
-
-  const handleSubmit = () => {
-    console.log("Selected Time:", time);
-  };
-
   return (
-    <View style={styles.container}>
-          <Text style={{color: 'white', fontSize: 30, fontWeight: 600}}>Home</Text>
-          <TouchableOpacity
-            onPress={startBackgroundServices}
-            style={{
-              backgroundColor: 'powderblue',
-              paddingHorizontal: 30,
-              paddingVertical: 12,
-              borderRadius: 20,
-              marginVertical: 10,
-            }}>
-            <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
-              Start Services
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={stopBackgroundServices}
-            style={{
-              backgroundColor: 'powderblue',
-              paddingHorizontal: 30,
-              paddingVertical: 12,
-              borderRadius: 20,
-              marginVertical: 10,
-            }}>
-            <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
-              Stop Services
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleSubmit}
-            style={{
-              backgroundColor: 'powderblue',
-              paddingHorizontal: 30,
-              paddingVertical: 12,
-              borderRadius: 20,
-              marginVertical: 10,
-            }}>
-            <Text style={{color: 'black', fontSize: 16, fontWeight: 600}}>
-              Post User
-            </Text>
-          </TouchableOpacity>
+    <View>
         </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
-  },
-  input: {
-    flex: 1,
-    fontSize: 18,
-    color:"black"
-  },
-});
 
 
 export default MedicationReminderScreen;
