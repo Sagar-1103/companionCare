@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'rgb(73, 70, 70)',
     marginTop: '15%',
+    marginBottom: '15%',
   },
   InnerLine: {
     fontSize: 22,
