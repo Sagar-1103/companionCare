@@ -46,6 +46,18 @@ const App = () => {
       },
       created => console.log(`createChannel returned '${created}'`),
     );
+    PushNotification.createChannel(
+      {
+        channelId: 'Medication-alert', 
+        channelName: 'Medication-alert Channel',
+        channelDescription: 'Channel for Medication Alert',
+        playSound: true,
+        soundName: 'default',
+        importance: 4,
+        vibrate: true,
+      },
+      created => console.log(`createChannel returned '${created}'`),
+    );
   }, []);
 
   // Deep linking configuration

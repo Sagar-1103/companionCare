@@ -40,7 +40,7 @@ const ProfileScreen = () => {
         <FontAwesome6 name="angle-right" size={32} color="#000" />
       </TouchableOpacity>}
 
-      { user.role==="patient" && <TouchableOpacity style={styles.button} onPress={() => console.log("Connect Doctor")}>
+      { user.role==="patient" && <TouchableOpacity style={styles.button} onPress={() =>navigation.navigate("CodeDisplayScreen")}>
         <Fontisto name="doctor" size={42} color="#000" />
         <Text style={styles.buttonText}>Connect Doctor</Text>
         <FontAwesome6 name="angle-right" size={32} color="#000" />

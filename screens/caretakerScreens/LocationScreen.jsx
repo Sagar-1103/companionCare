@@ -169,7 +169,7 @@ const handleRadiusSubmit = async()=>{
     PushNotification.localNotification({
       channelId: "Fall-alert", 
       title: `Patient has fallen.`,
-      message: `Humpty Dumty had a great fall.`,  
+      message: `Patient has been falledn down.`,  
       bigText: "Tap this notification to open the map screen.",  
       importance: "high",  
       playSound: true,  

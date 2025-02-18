@@ -62,7 +62,7 @@ const Selection = () => {
           setDiseases(selectedDiseases);
           await AsyncStorage.setItem('diseases',JSON.stringify(selectedDiseases));
         }
-        navigation.navigate("CaretakerTabNavigator");
+        // return navigation.navigate("CaretakerTabNavigator");
       }
     } catch (error) {
       console.log("Error : ",error);

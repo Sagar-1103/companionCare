@@ -38,6 +38,7 @@ import InsulinDosageRecommendation from "../screens/patientScreens/InsulinDosage
 import ChatContactsList from '../screens/common/ChatContactList';
 import ProfileDisplayScreen from '../screens/common/ProfileDisplayScreen';
 import Selection from '../screens/auth/common/Selection';
+import CodeDisplayScreen from '../screens/common/CodeDisplayScreen';
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
@@ -156,6 +157,8 @@ const AppNavigator = () => {
         <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName="PatientTabNavigation"  >
                     <Stack.Screen name="PatientTabNavigation" component={PatientTabNavigation}/>
                     <Stack.Screen name="PatientChat" component={PatientChat}/>
+                    <Stack.Screen name="Selection" component={Selection}/>
+
         </Stack.Navigator>
         );
     }
@@ -179,6 +182,9 @@ const AppNavigator = () => {
                     <Stack.Screen name="InsulinDosageRecommendation" component={InsulinDosageRecommendation}/>
                     <Stack.Screen name="ChatContactsList" component={ChatContactsList}/>
                     <Stack.Screen name="ChatScreen" component={ChatScreen}/>
+                    <Stack.Screen name="ProfileDisplayScreen" component={ProfileDisplayScreen}/>
+                    <Stack.Screen name="Selection" component={Selection}/>
+                    <Stack.Screen name="CodeDisplayScreen" component={CodeDisplayScreen}/>
         </Stack.Navigator>
         );
     }
