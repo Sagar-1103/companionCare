@@ -35,11 +35,13 @@ const SignUp = ({ navigation }) => {
   const handleSignup = async () => {
     try {
       if (!name || !email || !password || !phoneNumber) {
-        Alert.alert('Missing fields', 'Fill all the fields');
+        // Alert.alert('Missing fields', 'Fill all the fields');
+        Toast.error('Fields Missing');
         return;
       }
       if (password !== confirmPassword) {
-        Alert.alert('Password Mismatch', 'Your passwords do not match');
+        // Alert.alert('Password Mismatch', 'Your passwords do not match');
+        Toast.error('Password Mismatch');
         setConfirmPassword('');
         return;
       }
@@ -71,7 +73,7 @@ const SignUp = ({ navigation }) => {
       setPhoneNumber('');
     } catch (error) {
       console.log('Error : ', error.message);
-      if(error.message==='Request failed with status code 409') Toast.error('User with this email already exist');
+      if(error.message==='Request failed with status code 409') Toast.error('User email already exist');
       else Toast.error(error.message);
       // Alert.alert('Error', 'Something went wrong. Please try again.');
     } finally {
@@ -84,8 +86,9 @@ const SignUp = ({ navigation }) => {
     <ToastManager 
         position="top-right" // Position it at the top-right corner
         style={{
-          padding:2,
-          marginTop: -710,
+          padding:'2%',
+          marginTop: -680,
+          right: '0.5%'
         }}
         textStyle={{
           fontSize: 15,
