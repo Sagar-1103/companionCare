@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import LottieView from 'lottie-react-native'; // Import LottieView
+import LottieView from 'lottie-react-native'; 
 import { BACKEND_URL } from '../../../constants/Ports';
 import axios from 'axios';
 import { useLogin } from '../../../context/LoginProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ToastManager, { Toast } from "toastify-react-native";
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -69,15 +70,30 @@ const SignUp = ({ navigation }) => {
       setConfirmPassword('');
       setPhoneNumber('');
     } catch (error) {
-      console.log('Error : ', error);
-      Alert.alert('Error', 'Something went wrong. Please try again.');
+      console.log('Error : ', error.message);
+      if(error.message==='Request failed with status code 409') Toast.error('User with this email already exist');
+      else Toast.error(error.message);
+      // Alert.alert('Error', 'Something went wrong. Please try again.');
     } finally {
       setIsLoading(false); // Stop loading
     }
   };
 
   return (
+    <>
+    <ToastManager 
+        position="top-right" // Position it at the top-right corner
+        style={{
+          padding:2,
+          marginTop: -710,
+        }}
+        textStyle={{
+          fontSize: 15,
+          padding:3,
+        }}
+      />
     <View style={styles.container}>
+    
       {/* Loader */}
       {isLoading && (
         <View style={styles.loaderContainer}>
@@ -192,6 +208,7 @@ const SignUp = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
+    </>
   );
 };
 
