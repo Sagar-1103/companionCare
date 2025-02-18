@@ -1,21 +1,21 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import FontAwesome from 'react-native-vector-icons/FontAwesome6'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-const SymptomLoggerButton = () => {
+const FirstAidButton = () => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={()=>navigation.navigate("LogScreen")} style={styles.container}>
+    <TouchableOpacity onPress={()=>navigation.navigate("FirstAidList")} style={styles.container}>
       {/* Icon */}
-      <FontAwesome name="clipboard-list" size={28} color="#000" style={{left:'42%', top:'5%'}}/>
+      <FontAwesome name="medkit" size={28} color="#000" style={{left:'42%', top:'5%'}}/>
 
       {/* Text */}
-      <Text style={styles.text}>Symptoms Logger</Text>
+      <Text style={styles.text}>First Aid</Text>
 
       {/* Image */}
       <Image
-        source={require("../assets/SymptomsLog.png")} // Replace with actual image path
+        source={require("../assets/FirstAid.png")} // Replace with actual image path
         style={styles.image}
       />
     </TouchableOpacity>
@@ -46,16 +46,16 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "left",
     color: "#333",
-    left:'-16%',
+    left:'-30%',
     top:'-10%',
   },
   image: {
-    width: '90%',
-    height: '92%',
+    width: '95%',
+    height: '80%',
     left:'0%',
     bottom:'13%',
     resizeMode: "contain",
   },
 });
 
-export default SymptomLoggerButton;
+export default FirstAidButton;

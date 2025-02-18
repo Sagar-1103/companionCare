@@ -11,6 +11,7 @@ import FallDetectionDemo from '../../testScreens/FallDetectionDemo';
 import { useLogin } from '../../context/LoginProvider';
 import { useNavigation } from '@react-navigation/native';
 import MedicationDemo from "../../testScreens/MedicationDemo";
+import FirstAidButton from '../../components/FirstAidButton';
 const HomeScreen = () => {
   const {user} = useLogin();
   const navigation = useNavigation();
@@ -29,21 +30,24 @@ const HomeScreen = () => {
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.row}>
-          <View style={[styles.componentWrapper, {height:'255%', width:'95%', left:'6%'}]}>
+          <View style={[styles.componentWrapper, {height:'230%', width:'95%', left:'6%'}]}>
             <Water />
           </View>
-          <View style={[styles.componentWrapper, {height:'255%', width:'95%', right:'50%'}]}>
+          <View style={[styles.componentWrapper, {height:'230%', width:'95%', right:'48%'}]}>
             <DiebetesComponent />
           </View>
         </View>
-        <View style={[styles.componentWrapper, {height:'190%', left:'5%', bottom:'14%'}]}>
+        <View style={[styles.componentWrapper, {height:'185%', left:'5%', bottom:'20%'}]}>
           <MedicationnReminderButton />
         </View>
-        <View style={[styles.componentWrapper, {height:'190%', left:'5%', bottom:'150%'}]}>
+        <View style={[styles.componentWrapper, {height:'185%', left:'5%', bottom:'155%'}]}>
           <TwachAIButton />
         </View>
-        <View style={[styles.componentWrapper, {height:'190%', left:'5%', bottom:'286%'}]}>
+        <View style={[styles.componentWrapper, {height:'185%', left:'5%', bottom:'290%'}]}>
           <SymptomLoggerButton />
+        </View>
+        <View style={[styles.componentWrapper, {height:'170%', left:'5%', bottom:'424%'}]}>
+          <FirstAidButton />
         </View>
       </ScrollView>
 
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    paddingBottom: '150%', // Extra space for floating button
+    paddingBottom: '202%', // Extra space for floating button
   },
   row: {
     flexDirection: 'row',
