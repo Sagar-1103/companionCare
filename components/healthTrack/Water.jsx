@@ -1,12 +1,14 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 
 const Water = () => {
+  const navigation = useNavigation();
   const waterLog = [3, 2, 0, 4, 1]; // Dummy data
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={()=>navigation.navigate("WaterIntakeScreen")} style={styles.container}>
       {/* Icon */}
       <FontAwesome6 name="droplet" size={22} color="#000" style={{ left: "39%", top: "9%" }} />
 

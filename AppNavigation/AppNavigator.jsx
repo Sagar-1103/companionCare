@@ -35,6 +35,7 @@ import SpO2TrackerScreen from '../screens/common/SpO2TrackerScreen';
 import AddSymptonScreen from "../screens/patientScreens/AddSymptonScreen";
 import InsulinDosageScreen from '../screens/patientScreens/InsulinDosageScreen';
 import InsulinDosageRecommendation from "../screens/patientScreens/InsulinDosageRecommendation";
+import WaterIntakeScreen from "../screens/patientScreens/WaterIntakeScreen";
 import ChatContactsList from '../screens/common/ChatContactList';
 import ProfileDisplayScreen from '../screens/common/ProfileDisplayScreen';
 import Selection from '../screens/auth/common/Selection';
@@ -185,6 +186,7 @@ const AppNavigator = () => {
                     <Stack.Screen name="ProfileDisplayScreen" component={ProfileDisplayScreen}/>
                     <Stack.Screen name="Selection" component={Selection}/>
                     <Stack.Screen name="CodeDisplayScreen" component={CodeDisplayScreen}/>
+                    <Stack.Screen name="WaterIntakeScreen" component={WaterIntakeScreen}/>
         </Stack.Navigator>
         );
     }

@@ -61,7 +61,7 @@ const WaterIntakeScreen = () => {
             <View style={styles.circleContent}>
               {/* Water Glass Image */}
               <Image
-                source={require('../assets/water-drink.png')} // Replace with your image path
+                source={require('../../assets/water-drink.png')} // Replace with your image path
                 style={styles.waterGlassImage}
               />
             </View>
